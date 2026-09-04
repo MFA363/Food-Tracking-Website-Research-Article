@@ -1,0 +1,10 @@
+{
+  "description": "Track daily food and nutrient intake with personalized BMI and calorie calculations to support healthy lifestyle goals for Southeast Asian users.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
