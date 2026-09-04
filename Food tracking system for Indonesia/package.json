@@ -25,14 +25,5 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "vite": "^8.0.5"
-<<<<<<< HEAD
-  } 
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@firebase/util",
-      "protobufjs"
-    ]
-=======
->>>>>>> 31786862aa6f5ba68923c1f0831bbfbac4852d0f
   }
 }
