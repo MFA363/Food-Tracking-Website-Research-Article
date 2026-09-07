@@ -96,8 +96,8 @@ export default function Register() {
       {/* Left panel */}
       <div className="hidden lg:flex flex-col justify-between w-5/12 p-12" style={{ background: "var(--primary)" }}>
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">N</div>
-          <span className="font-display font-bold text-2xl text-white">NutCal</span>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">C</div>
+          <span className="font-display font-bold text-2xl text-white">CalNut</span>
         </Link>
         <div className="space-y-8">
           {STEPS.map((s, i) => (
@@ -210,7 +210,7 @@ export default function Register() {
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>IMT</span><span className="font-mono font-bold" style={{ color: bmiPreview.color }}>{bmiPreview.value}</span></div>
                     <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Kategori</span><span style={{ color: bmiPreview.color }}>{t(bmiPreview.category as any)}</span></div>
-                    <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>BMR</span><span className="font-mono" style={{ color: "var(--foreground)" }}>{energyPreview.bmr} kkal</span></div>
+                    <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>REE</span><span className="font-mono" style={{ color: "var(--foreground)" }}>{energyPreview.bmr} kkal</span></div>
                     <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>TDEE</span><span className="font-mono font-bold" style={{ color: "var(--primary)" }}>{energyPreview.tdee} kkal</span></div>
                   </div>
                 </div>

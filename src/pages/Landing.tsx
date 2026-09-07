@@ -23,7 +23,7 @@ const FEATURES = [
   {
     icon: "🌏",
     title: { id: "Multibahasa", en: "Multilingual" },
-    desc: { id: "Tersedia dalam Bahasa Indonesia, Inggris, Melayu, Jawa, dan Arab.", en: "Available in Indonesian, English, Malay, Javanese, and Arabic." },
+    desc: { id: "Pilihan bahasa antarmuka: Indonesia, Inggris, Melayu, Jawa, dan Arab. Sebagian konten belum diterjemahkan.", en: "Interface language options: Indonesian, English, Malay, Javanese, and Arabic. Some content remains untranslated." },
   },
   {
     icon: "📱",
@@ -32,8 +32,8 @@ const FEATURES = [
   },
   {
     icon: "🏥",
-    title: { id: "Berbasis Data Ilmiah", en: "Science-Based Data" },
-    desc: { id: "Data pangan dari TKPI 2020 (Tabel Komposisi Pangan Indonesia).", en: "Food data from the Indonesian Food Composition Table (TKPI 2020)." },
+    title: { id: "Referensi Data Pangan", en: "Food Data References" },
+    desc: { id: "Impor berlabel TKPI 2020; transkripsi perlu diverifikasi.", en: "Imported data labelled TKPI 2020; transcription requires verification." },
   },
 ];
 
@@ -46,8 +46,8 @@ export default function Landing() {
       <nav className="sticky top-0 z-40 border-b" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>N</div>
-            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>NutCal</span>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>C</div>
+            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>CalNut</span>
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -65,6 +65,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
+      <div className="max-w-6xl mx-auto px-6 pt-4 text-sm"><Link className="underline" to="/references">Sources, methods & data quality / Sumber dan metode · Reviewed 8 September 2026</Link></div>
       <section className="relative overflow-hidden py-20 sm:py-32">
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, var(--primary) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--accent) 0%, transparent 50%)" }} />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
@@ -103,7 +104,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
             {[
-              { value: "1.900+", label: lang === "id" ? "Entri pangan Indonesia" : "Indonesian food entries" },
+              { value: "TKPI", label: lang === "id" ? "Impor perlu verifikasi" : "Import requires verification" },
               { value: "12", label: lang === "id" ? "Nutrisi Dipantau" : "Nutrients Tracked" },
               { value: "5", label: lang === "id" ? "Bahasa Tersedia" : "Languages Available" },
               { value: "TKPI", label: lang === "id" ? "Sumber Data Gizi" : "Data Source" },
@@ -147,8 +148,8 @@ export default function Landing() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             ⚠️ {lang === "id"
-              ? "NutCal menampilkan data TKPI 2020 per 100 gram. Nilai aktual dapat berbeda menurut bahan, bagian pangan, dan cara pengolahan. Konsultasikan tenaga kesehatan untuk keputusan klinis."
-              : "NutCal displays TKPI 2020 data per 100 grams. Actual values vary by ingredient, edible portion, and preparation. Consult a health professional for clinical decisions."}
+              ? "CalNut menampilkan data impor yang belum terverifikasi per 100 gram. Nilai aktual dapat berbeda menurut bahan, bagian pangan, dan cara pengolahan. Konsultasikan tenaga kesehatan untuk keputusan klinis."
+              : "CalNut displays unverified imported food data per 100 grams. Actual values vary by ingredient, edible portion, and preparation. Consult a health professional for clinical decisions."}
           </p>
         </div>
       </section>
@@ -175,8 +176,8 @@ export default function Landing() {
       {/* Footer */}
       <footer className="border-t py-8" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2025 NutCal · Pekalongan, Jawa Tengah, Indonesia</p>
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data pangan: TKPI 2020 · Per 100 gram bagian dapat dimakan</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2026 CalNut · Pekalongan, Jawa Tengah, Indonesia</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Impor TKPI 2020: belum terverifikasi · Per 100 gram bagian dapat dimakan</p>
         </div>
       </footer>
     </div>

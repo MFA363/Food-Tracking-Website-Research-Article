@@ -36,17 +36,17 @@ export default function Login() {
       {/* Left panel */}
       <div className="hidden lg:flex flex-col justify-between w-1/2 p-12" style={{ background: "var(--primary)" }}>
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">N</div>
-          <span className="font-display font-bold text-2xl text-white">NutCal</span>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">C</div>
+          <span className="font-display font-bold text-2xl text-white">CalNut</span>
         </Link>
         <div>
           <blockquote className="text-white/90 text-xl font-display font-semibold leading-relaxed mb-4">
             "Makanan yang kamu konsumsi setiap hari membentuk siapa dirimu. Pantau dengan bijak."
           </blockquote>
-          <p className="text-white/60 text-sm">— NutCal, untuk hidup lebih sehat</p>
+          <p className="text-white/60 text-sm">— CalNut, untuk hidup lebih sehat</p>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {[["40+", "Jenis Makanan"], ["12", "Nutrisi Dipantau"], ["5", "Bahasa"]].map(([val, lbl]) => (
+          {[["g", "Berat pangan"], ["12", "Nutrisi Dipantau"], ["5", "Bahasa"]].map(([val, lbl]) => (
             <div key={lbl} className="bg-white/10 rounded-xl p-4 text-center">
               <p className="font-display font-black text-2xl text-white">{val}</p>
               <p className="text-white/70 text-xs mt-1">{lbl}</p>
@@ -60,8 +60,8 @@ export default function Login() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <Link to="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>N</div>
-            <span className="font-display font-bold text-xl" style={{ color: "var(--foreground)" }}>NutCal</span>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>C</div>
+            <span className="font-display font-bold text-xl" style={{ color: "var(--foreground)" }}>CalNut</span>
           </Link>
 
           <h1 className="font-display font-black text-3xl mb-2" style={{ color: "var(--foreground)" }}>{t("loginTitle")}</h1>

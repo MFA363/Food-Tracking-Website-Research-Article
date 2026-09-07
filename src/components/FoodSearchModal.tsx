@@ -48,7 +48,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
       setUseCustomWeight(false);
       setMealType(defaultMeal);
       setTimeout(() => inputRef.current?.focus(), 100);
-      getCustomFoods().then(setCustomFoods);
+      getCustomFoods().then(setCustomFoods).catch(() => setDataError("Custom foods could not be loaded. Please retry."));
       loadTkpiFoods().then(setTkpiFoods).catch(() => setDataError("Database TKPI 2020 tidak dapat dimuat. Coba muat ulang halaman."));
 
       if (editEntry) {
@@ -67,11 +67,11 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   }, [open, defaultMeal, editEntry]);
 
   useEffect(() => {
-    const localFoods = [...searchFoods(query, lang, category), ...customFoods.filter(f =>
+    const localFoods = [...customFoods.filter(f =>
       (!query || f.name[lang]?.toLowerCase().includes(query.toLowerCase()) || f.name.en.toLowerCase().includes(query.toLowerCase())) &&
       (category === "all" || f.category === category)
     )];
-    const officialFoods = category === "all" ? searchTkpiFoods(tkpiFoods, query) : [];
+    const officialFoods = searchTkpiFoods(tkpiFoods.filter((food) => category === "all" || food.category === category), query);
     setResults([...localFoods, ...officialFoods].slice(0, 20));
   }, [query, category, lang, customFoods, tkpiFoods]);
 
@@ -145,6 +145,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
         <div className="overflow-y-auto flex-1">
           {!selected ? (
             <div className="p-4 space-y-3">
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Food values are not independently verified. Invalid or incomplete imported rows are excluded. Weigh the edible portion. <a href="/references" className="underline">Data quality & sources</a></p>
               {/* Meal type selector */}
               <div className="grid grid-cols-4 gap-1 p-1 rounded-xl" style={{ background: "var(--muted)" }}>
                 {(["breakfast", "lunch", "dinner", "snack"] as MealType[]).map((m) => (

@@ -8,7 +8,7 @@ const FEATURES = [
   {
     icon: "🥗",
     title: { id: "Pantau Asupan Gizi", en: "Track Nutritional Intake" },
-    desc: { id: "Catat setiap makanan dan minuman yang Anda konsumsi dengan mudah dan akurat.", en: "Log every meal with detailed nutritional breakdowns from TKPI 2017 data." },
+    desc: { id: "Catat setiap makanan dan minuman yang Anda konsumsi dengan mudah dan akurat.", en: "Log every meal with detailed nutritional breakdowns from TKPI (import; verification pending) data." },
   },
   {
     icon: "📊",
@@ -23,7 +23,7 @@ const FEATURES = [
   {
     icon: "🌏",
     title: { id: "Multibahasa", en: "Multilingual" },
-    desc: { id: "Tersedia dalam Bahasa Indonesia, Inggris, Melayu, Jawa, dan Arab.", en: "Available in Indonesian, English, Malay, Javanese, and Arabic." },
+    desc: { id: "Pilihan bahasa antarmuka: Indonesia, Inggris, Melayu, Jawa, dan Arab. Sebagian konten belum diterjemahkan.", en: "Interface language options: Indonesian, English, Malay, Javanese, and Arabic. Some content remains untranslated." },
   },
   {
     icon: "📱",
@@ -32,8 +32,8 @@ const FEATURES = [
   },
   {
     icon: "🏥",
-    title: { id: "Berbasis Data Ilmiah", en: "Science-Based Data" },
-    desc: { id: "Data gizi dari TKPI 2017 (Tabel Komposisi Pangan Indonesia) yang terstandarisasi.", en: "Nutritional data from the official Indonesian Food Composition Table (TKPI 2017)." },
+    title: { id: "Referensi Data Pangan", en: "Food Data References" },
+    desc: { id: "Data gizi dari TKPI (import; verification pending) (Tabel Komposisi Pangan Indonesia) yang terstandarisasi.", en: "Nutritional data from the official Indonesian Food Composition Table (TKPI (import; verification pending))." },
   },
 ];
 
@@ -46,8 +46,8 @@ export default function Landing() {
       <nav className="sticky top-0 z-40 border-b" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>N</div>
-            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>NutCal</span>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>C</div>
+            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>CalNut</span>
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -65,6 +65,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
+      <div className="max-w-6xl mx-auto px-6 pt-4 text-sm"><Link className="underline" to="/references">Sources, methods & data quality / Sumber dan metode · Reviewed 8 September 2026</Link></div>
       <section className="relative overflow-hidden py-20 sm:py-32">
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, var(--primary) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--accent) 0%, transparent 50%)" }} />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
@@ -106,7 +107,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
             {[
-              { value: "40+", label: lang === "id" ? "Jenis Makanan Indonesia" : "Indonesian Foods" },
+              { value: "TKPI", label: lang === "id" ? "Jenis Makanan Indonesia" : "Indonesian Foods" },
               { value: "12", label: lang === "id" ? "Nutrisi Dipantau" : "Nutrients Tracked" },
               { value: "5", label: lang === "id" ? "Bahasa Tersedia" : "Languages Available" },
               { value: "TKPI", label: lang === "id" ? "Sumber Data Gizi" : "Data Source" },
@@ -150,8 +151,8 @@ export default function Landing() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             ⚠️ {lang === "id"
-              ? "NutCal menampilkan estimasi nilai gizi berdasarkan TKPI 2017. Nilai sebenarnya dapat berbeda. Konsultasikan dengan ahli gizi untuk saran medis."
-              : "NutCal displays estimated nutritional values based on TKPI 2017. Actual values may differ. Consult a nutritionist for medical advice."}
+              ? "CalNut menampilkan estimasi nilai gizi berdasarkan TKPI (import; verification pending). Nilai sebenarnya dapat berbeda. Konsultasikan dengan ahli gizi untuk saran medis."
+              : "CalNut displays estimated nutritional values based on TKPI (import; verification pending). Actual values may differ. Consult a nutritionist for medical advice."}
           </p>
         </div>
       </section>
@@ -178,8 +179,8 @@ export default function Landing() {
       {/* Footer */}
       <footer className="border-t py-8" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2025 NutCal · Pekalongan, Jawa Tengah, Indonesia</p>
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data gizi: TKPI 2017 · Nilai bersifat estimasi</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2026 CalNut · Pekalongan, Jawa Tengah, Indonesia</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data gizi: TKPI (import; verification pending) · Nilai bersifat estimasi</p>
         </div>
       </footer>
     </div>

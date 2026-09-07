@@ -5,7 +5,7 @@ export type TranslationKey = keyof typeof translations.en;
 const translations = {
   en: {
     // App
-    appName: "NutCal",
+    appName: "CalNut",
     appTagline: "Your Personal Nutrition Companion",
     appDesc: "Track your food intake, understand your nutrition, and reach your health goals.",
 
@@ -59,7 +59,7 @@ const translations = {
     dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Calories Consumed Today",
     caloriesRemaining: "Estimated Remaining",
-    estimatedNote: "Estimated nutritional values based on TKPI 2017 data",
+    estimatedNote: "Estimated nutritional values based on TKPI (import; verification pending) data",
     underweight: "Underweight",
     normal: "Normal Weight",
     overweight: "Overweight",
@@ -120,7 +120,7 @@ const translations = {
     micros: "Minerals",
     byMeal: "By Meal",
     byFood: "By Food Item",
-    disclaimer: "These are estimated values based on standard nutritional data (TKPI 2017). Actual values may vary based on cooking method, portion size, and food variety.",
+    disclaimer: "These are estimated values based on standard nutritional data (TKPI (import; verification pending)). Actual values may vary based on cooking method, portion size, and food variety.",
 
     // Profile
     profileTitle: "My Profile",
@@ -187,7 +187,7 @@ const translations = {
   },
 
   id: {
-    appName: "NutCal",
+    appName: "CalNut",
     appTagline: "Pendamping Gizi Personalmu",
     appDesc: "Catat asupan makananmu, pahami gizimu, dan capai tujuan kesehatanmu.",
 
@@ -237,7 +237,7 @@ const translations = {
     dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Dikonsumsi Hari Ini",
     caloriesRemaining: "Estimasi Sisa",
-    estimatedNote: "Nilai gizi yang diestimasi berdasarkan data TKPI 2017",
+    estimatedNote: "Nilai gizi yang diestimasi berdasarkan data TKPI (import; verification pending)",
     underweight: "Kurus",
     normal: "Normal",
     overweight: "Gemuk",
@@ -295,7 +295,7 @@ const translations = {
     micros: "Mineral",
     byMeal: "Per Waktu Makan",
     byFood: "Per Item Makanan",
-    disclaimer: "Ini adalah nilai estimasi berdasarkan data gizi standar (TKPI 2017). Nilai sebenarnya dapat bervariasi tergantung metode memasak, ukuran porsi, dan varietas makanan.",
+    disclaimer: "Ini adalah nilai estimasi berdasarkan data gizi standar (TKPI (import; verification pending)). Nilai sebenarnya dapat bervariasi tergantung metode memasak, ukuran porsi, dan varietas makanan.",
 
     profileTitle: "Profil Saya",
     personalInfo: "Informasi Pribadi",
@@ -356,7 +356,7 @@ const translations = {
   },
 
   ms: {
-    appName: "NutCal",
+    appName: "CalNut",
     appTagline: "Pembantu Pemakanan Peribadi Anda",
     appDesc: "Rekod pengambilan makanan anda, fahami pemakanan anda, dan capai matlamat kesihatan anda.",
 
@@ -406,7 +406,7 @@ const translations = {
     dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Diambil Hari Ini",
     caloriesRemaining: "Anggaran Baki",
-    estimatedNote: "Nilai pemakanan yang dianggarkan berdasarkan data TKPI 2017",
+    estimatedNote: "Nilai pemakanan yang dianggarkan berdasarkan data TKPI (import; verification pending)",
     underweight: "Kurus",
     normal: "Normal",
     overweight: "Berlebihan Berat Badan",
@@ -464,7 +464,7 @@ const translations = {
     micros: "Mineral",
     byMeal: "Mengikut Waktu Makan",
     byFood: "Mengikut Item Makanan",
-    disclaimer: "Ini adalah nilai anggaran berdasarkan data pemakanan standard (TKPI 2017). Nilai sebenar mungkin berbeza bergantung pada kaedah memasak, saiz hidangan, dan jenis makanan.",
+    disclaimer: "Ini adalah nilai anggaran berdasarkan data pemakanan standard (TKPI (import; verification pending)). Nilai sebenar mungkin berbeza bergantung pada kaedah memasak, saiz hidangan, dan jenis makanan.",
 
     profileTitle: "Profil Saya",
     personalInfo: "Maklumat Peribadi",
@@ -525,7 +525,7 @@ const translations = {
   },
 
   jv: {
-    appName: "NutCal",
+    appName: "CalNut",
     appTagline: "Kancamu kanggo Gizi sing Personal",
     appDesc: "Cathetan asupan pangananmu, ngerti gizimu, lan nggayuh tujuan kesehatanmu.",
 
@@ -575,7 +575,7 @@ const translations = {
     dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Dikonsumsi Dina Iki",
     caloriesRemaining: "Estimasi Sisa",
-    estimatedNote: "Nilai gizi sing diestimasi adhedhasar data TKPI 2017",
+    estimatedNote: "Nilai gizi sing diestimasi adhedhasar data TKPI (import; verification pending)",
     underweight: "Kuru",
     normal: "Normal",
     overweight: "Lemu",
@@ -633,7 +633,7 @@ const translations = {
     micros: "Mineral",
     byMeal: "Per Wektu Mangan",
     byFood: "Per Item Panganan",
-    disclaimer: "Iki nilai estimasi adhedhasar data gizi standar (TKPI 2017). Nilai sing bener bisa beda-beda gumantung cara masak, ukuran porsi, lan jenis panganan.",
+    disclaimer: "Iki nilai estimasi adhedhasar data gizi standar (TKPI (import; verification pending)). Nilai sing bener bisa beda-beda gumantung cara masak, ukuran porsi, lan jenis panganan.",
 
     profileTitle: "Profil Aku",
     personalInfo: "Informasi Pribadi",
@@ -744,7 +744,7 @@ const translations = {
     dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "السعرات المستهلكة اليوم",
     caloriesRemaining: "الباقي المقدر",
-    estimatedNote: "قيم غذائية مقدرة استناداً إلى بيانات TKPI 2017",
+    estimatedNote: "قيم غذائية مقدرة استناداً إلى بيانات TKPI (import; verification pending)",
     underweight: "نقص الوزن",
     normal: "وزن طبيعي",
     overweight: "زيادة الوزن",
@@ -802,7 +802,7 @@ const translations = {
     micros: "المعادن",
     byMeal: "حسب الوجبة",
     byFood: "حسب الطعام",
-    disclaimer: "هذه قيم مقدرة استناداً إلى بيانات غذائية قياسية (TKPI 2017). قد تختلف القيم الفعلية حسب طريقة الطهي وحجم الحصة ونوع الطعام.",
+    disclaimer: "هذه قيم مقدرة استناداً إلى بيانات غذائية قياسية (TKPI (import; verification pending)). قد تختلف القيم الفعلية حسب طريقة الطهي وحجم الحصة ونوع الطعام.",
 
     profileTitle: "ملفي الشخصي",
     personalInfo: "المعلومات الشخصية",

@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getUserLogs } from "@/lib/firebase";
 import { sumNutrients, getRDI, calculateEnergyRequirement } from "@/lib/calculations";
 import NutrientProgress from "@/components/NutrientProgress";
+import { calculateMacroTargets } from "@/lib/macronutrients";
 import type { FoodLogEntry, Nutrients } from "@/lib/types";
 
 function todayStr() { return new Date().toISOString().split("T")[0]; }
@@ -27,6 +28,14 @@ export default function NutritionSummary() {
   const rdi = getRDI(user.gender, user.age);
   const energy = calculateEnergyRequirement(user.weight, user.height, user.age, user.gender, user.activityLevel);
   const totals = sumNutrients(logs);
+  if (user.macroPercentages && energy.tdee > 0) {
+    try {
+      const targets = calculateMacroTargets(energy.tdee, user.macroPercentages);
+      rdi.carbohydrate = targets.carbohydrate.grams;
+      rdi.protein = targets.protein.grams;
+      rdi.fat = targets.fat.grams;
+    } catch { /* Use reference values for invalid stored allocations. */ }
+  }
 
   const MACRO_NUTRIENTS: { key: keyof Nutrients; label: string; unit: string; color: string }[] = [
     { key: "energy", label: t("energy"), unit: "kkal", color: "var(--accent)" },
@@ -86,7 +95,7 @@ export default function NutritionSummary() {
             <div key={card.label} className="p-4 rounded-2xl border" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
               <p className="text-xs font-semibold uppercase" style={{ color: "var(--muted-foreground)" }}>{card.label}</p>
               <p className="font-display font-black text-2xl mt-1" style={{ color: card.color }}>{card.value}</p>
-              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{card.unit} · {pct}% AKG</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{card.unit} · {pct}% reference / target</p>
             </div>
           );
         })}

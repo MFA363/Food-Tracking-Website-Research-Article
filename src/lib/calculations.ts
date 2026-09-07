@@ -1,6 +1,6 @@
 import type { Gender, ActivityLevel, BMIResult, EnergyRequirement, Nutrients, FoodLogEntry } from "./types";
 
-// WHO Asian-Pacific BMI classification
+// Asia-Pacific adult bands; not universal WHO cutoffs. See /references.
 export function calculateBMI(weightKg: number, heightCm: number): BMIResult {
   const heightM = heightCm / 100;
   const bmi = weightKg / (heightM * heightM);
@@ -28,7 +28,7 @@ export function calculateBMI(weightKg: number, heightCm: number): BMIResult {
   return { value: Math.round(bmi * 10) / 10, category, color };
 }
 
-// Mifflin-St Jeor equation (more accurate than Harris-Benedict)
+// Mifflin–St Jeor resting energy estimate. Activity multipliers are assumptions.
 export function calculateEnergyRequirement(
   weightKg: number,
   heightCm: number,
@@ -36,6 +36,7 @@ export function calculateEnergyRequirement(
   gender: Gender,
   activityLevel: ActivityLevel
 ): EnergyRequirement {
+  if (![weightKg, heightCm, age].every(Number.isFinite) || weightKg <= 0 || heightCm <= 0 || age < 19 || age > 78) return { bmr: 0, tdee: 0, activityFactor: 0 };
   let bmr: number;
   if (gender === "male") {
     bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
@@ -100,26 +101,7 @@ export function sumNutrients(entries: FoodLogEntry[]): Nutrients {
   );
 }
 
-// Recommended Daily Intake reference values (Indonesian AKG 2019 for adults 19-29y)
-export function getRDI(gender: Gender, age: number): Nutrients {
-  const isMale = gender === "male";
-  // Values adjusted by age groups (simplified)
-  const ageAdult = age >= 60;
-  return {
-    energy: isMale ? 2650 : 2250,
-    protein: isMale ? 65 : 60,
-    fat: isMale ? 73 : 65,
-    carbohydrate: isMale ? 430 : 360,
-    fiber: isMale ? 38 : 32,
-    calcium: 1000,
-    phosphorus: 700,
-    iron: isMale ? 9 : (age < 50 ? 26 : 9),
-    sodium: 1500,
-    potassium: isMale ? 4700 : 4700,
-    copper: 0.9,
-    zinc: isMale ? 11 : 8,
-  };
-}
+export { adultReferenceIntakes as getRDI } from "./referenceIntakes";
 
 export function getMealTypeFromHour(hour: number): import("./types").MealType {
   if (hour >= 5 && hour < 10) return "breakfast";

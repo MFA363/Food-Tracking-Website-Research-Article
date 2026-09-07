@@ -57,7 +57,7 @@ export default function Dashboard() {
   }
   const totals = sumNutrients(logs);
 
-  const caloriesPct = Math.min((totals.energy / energy.tdee) * 100, 100);
+  const caloriesPct = energy.tdee > 0 ? Math.min((totals.energy / energy.tdee) * 100, 100) : 0;
   const caloriesRemaining = Math.max(energy.tdee - totals.energy, 0);
 
   const mealGroups: Record<MealType, FoodLogEntry[]> = {
@@ -75,13 +75,6 @@ export default function Dashboard() {
   const handleAdd = (entry: FoodLogEntry) => {
     setLogs((prev) => [...prev, entry]);
   };
-
-  // Insights
-  const insights: { nutrient: string; message: string; tip: string }[] = [];
-  if (totals.fiber < rdi.fiber * 0.5) insights.push({ nutrient: "🌾 " + t("fiber"), message: lang === "id" ? "Asupan serat Anda masih rendah hari ini." : "Your fiber intake is low today.", tip: lang === "id" ? "Coba tambahkan sayuran hijau atau buah." : "Try adding green vegetables or fruits." });
-  if (totals.calcium < rdi.calcium * 0.5) insights.push({ nutrient: "🦴 " + t("calcium"), message: lang === "id" ? "Kalsium Anda belum mencukupi." : "Your calcium intake is insufficient.", tip: lang === "id" ? "Konsumsi susu atau tahu untuk tambah kalsium." : "Consume milk or tofu to boost calcium." });
-  if (totals.iron < rdi.iron * 0.5) insights.push({ nutrient: "🔴 " + t("iron"), message: lang === "id" ? "Zat besi Anda kurang." : "Your iron intake is low.", tip: lang === "id" ? "Makan tempe, bayam, atau ikan untuk tambah zat besi." : "Eat tempeh, spinach, or fish for more iron." });
-  if (totals.energy > energy.tdee * 0.9) insights.push({ nutrient: "⚡ " + t("energy"), message: lang === "id" ? "Anda hampir mencapai kebutuhan kalori harian." : "You're close to your daily calorie goal.", tip: lang === "id" ? "Perhatikan makanan berikutnya agar tidak berlebih." : "Be mindful of your next meal to avoid exceeding your limit." });
 
   const dateFormatted = new Date(today).toLocaleDateString(lang === "ar" ? "ar-SA" : lang === "en" ? "en-GB" : "id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
@@ -110,7 +103,7 @@ export default function Dashboard() {
         {/* BMI card */}
         <div className="rounded-2xl p-5 border sm:col-span-1 flex flex-col items-center" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted-foreground)" }}>{t("bmi")}</p>
-          <BMIGauge bmi={bmi} />
+          {user.age >= 19 ? <BMIGauge bmi={bmi} /> : <p>Adult BMI unavailable for this age.</p>}
           <p className="text-xs text-center mt-2" style={{ color: "var(--muted-foreground)" }}>
             {user.weight}kg · {user.height}cm
           </p>
@@ -120,14 +113,14 @@ export default function Dashboard() {
         <div className="rounded-2xl p-5 border flex flex-col justify-between" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "var(--muted-foreground)" }}>{t("dailyEnergyNeeds")}</p>
-            <p className="font-display font-black text-3xl mt-2" style={{ color: "var(--primary)" }}>{energy.tdee.toLocaleString()}</p>
+            <p className="font-display font-black text-3xl mt-2" style={{ color: "var(--primary)" }}>{energy.tdee > 0 ? energy.tdee.toLocaleString() : "—"}</p>
             <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>kkal / hari</p>
           </div>
           <div className="mt-4 text-xs space-y-1">
-            <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>BMR</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>{energy.bmr} kkal</span></div>
+            <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>REE</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>{energy.bmr} kkal</span></div>
             <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Faktor Aktivitas</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>×{energy.activityFactor}</span></div>
           </div>
-          <p className="text-xs mt-3 italic" style={{ color: "var(--muted-foreground)" }}>{t("estimatedNote")}</p>
+          <p className="text-xs mt-3 italic" style={{ color: "var(--muted-foreground)" }}>REE × activity factor; adult estimate. See sources and methods.</p>
         </div>
 
         {/* Calories today */}
@@ -161,34 +154,6 @@ export default function Dashboard() {
       </div>
 
       <MacronutrientCalculator key={user.uid} tdee={user.height > 0 && user.weight > 0 && user.age > 0 ? energy.tdee : 0} />
-
-      {/* Insights */}
-      {insights.length > 0 && (
-        <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-          <button
-            className="w-full flex items-center justify-between px-5 py-4 hover:bg-muted transition-all"
-            onClick={() => setShowInsights(!showInsights)}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-lg">💡</span>
-              <span className="font-display font-bold" style={{ color: "var(--foreground)" }}>{t("nutritionInsights")}</span>
-              <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "var(--accent)", color: "var(--accent-foreground)" }}>{insights.length}</span>
-            </div>
-            <svg className={`w-4 h-4 transition-transform ${showInsights ? "rotate-180" : ""}`} style={{ color: "var(--muted-foreground)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-          </button>
-          {showInsights && (
-            <div className="px-5 pb-5 grid sm:grid-cols-2 gap-3">
-              {insights.map((ins, i) => (
-                <div key={i} className="p-4 rounded-xl border" style={{ background: "var(--muted)", borderColor: "var(--border)" }}>
-                  <p className="font-semibold text-sm mb-1" style={{ color: "var(--foreground)" }}>{ins.nutrient}</p>
-                  <p className="text-xs mb-2" style={{ color: "var(--muted-foreground)" }}>{ins.message}</p>
-                  <p className="text-xs font-medium" style={{ color: "var(--primary)" }}>💡 {ins.tip}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Meal groups */}
       <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--card)", borderColor: "var(--border)" }}>

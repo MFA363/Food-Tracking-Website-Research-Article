@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 
 // Public pages
 import Landing from "@/pages/Landing";
+import References from "@/pages/References";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 
@@ -31,6 +32,7 @@ export default function App() {
           <Routes>
             {/* Public */}
             <Route path="/" element={<Landing />} />
+            <Route path="/references" element={<References />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 

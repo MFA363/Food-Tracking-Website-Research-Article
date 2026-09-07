@@ -74,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Logo */}
             <Link to="/dashboard" className="flex items-center gap-2.5 group">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>
-                N
+                C
               </div>
               <span className="font-display font-bold text-lg tracking-tight hidden sm:block" style={{ color: "var(--foreground)" }}>
                 {t("appName")}
@@ -196,6 +196,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6">
+        <p className="mb-4 text-xs" style={{ color: "var(--muted-foreground)" }}>Adult reference estimates; imported food values require verification. Pregnancy, lactation, and clinical adjustments are not included. <Link to="/references" className="underline">Sources & methods / Sumber dan metode</Link></p>
         {children}
       </main>
 
@@ -203,10 +204,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t mt-auto py-6" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            © 2026 NutCal · Platform praktik dan pembelajaran gizi Indonesia
+            © 2026 CalNut · Platform praktik dan pembelajaran gizi Indonesia
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Data pangan: TKPI 2020 · Nilai dapat berbeda menurut bahan dan pengolahan
+            Impor TKPI 2020: belum terverifikasi · Nilai dapat berbeda menurut bahan dan pengolahan
           </p>
         </div>
       </footer>

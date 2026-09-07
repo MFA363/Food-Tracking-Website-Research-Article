@@ -41,6 +41,11 @@ export default function Profile() {
       setError(t("errorRequired")); return;
     }
     setSaving(true);
+    if (![form.height, form.weight, form.age].every((value) => Number.isFinite(Number(value))) || Number(form.height) < 50 || Number(form.height) > 250 || Number(form.weight) < 20 || Number(form.weight) > 300 || Number(form.age) < 19 || Number(form.age) > 120) {
+      setError("Enter valid adult profile values: age 19–120, height 50–250 cm, weight 20–300 kg.");
+      setSaving(false);
+      return;
+    }
     try {
       await updateUserProfile(user.uid, {
         name: form.name,
@@ -83,7 +88,7 @@ export default function Profile() {
           <p className="font-display font-black text-4xl" style={{ color: "var(--primary)" }}>{energy.tdee.toLocaleString()}</p>
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>kkal / hari (estimasi)</p>
           <div className="mt-4 space-y-2 text-sm">
-            <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>BMR (Mifflin-St Jeor)</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>{energy.bmr} kkal</span></div>
+            <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>REE (Mifflin–St Jeor)</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>{energy.bmr} kkal</span></div>
             <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Faktor Aktivitas</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>×{energy.activityFactor}</span></div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export default function NutrientProgress({ label, value, rdi, unit, color = "var
       {rdi > 0 && (
         <div className="text-right">
           <span className="text-xs font-mono" style={{ color: over ? "#EF4444" : "var(--muted-foreground)" }}>
-            {Math.round(pct)}% AKG
+            {Math.round(value / rdi * 100)}% reference / target
           </span>
         </div>
       )}
