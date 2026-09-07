@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateMacroTargets } from '../src/lib/macronutrients.ts';
+import { calculateMacroTargets, deriveMacroPercentages } from '../src/lib/macronutrients.ts';
 
 test('allocates 2000 kcal at 55/25/20 into calories and grams', () => {
   const result = calculateMacroTargets(2000, { carbohydrate: 55, protein: 25, fat: 20 });
@@ -17,4 +17,12 @@ test('rejects invalid totals, percentages, and TDEE', () => {
 test('accepts decimal percentages and conserves total energy', () => {
   const targets = calculateMacroTargets(2345, { carbohydrate: 55.55, protein: 24.45, fat: 20 });
   assert.ok(Math.abs(Object.values(targets).reduce((sum, target) => sum + target.energy, 0) - 2345) < 1e-8);
+});
+
+test('carbohydrate is the remainder, including decimal and zero boundaries', () => {
+  assert.deepEqual(deriveMacroPercentages(25, 20), { carbohydrate: 55, protein: 25, fat: 20 });
+  assert.equal(deriveMacroPercentages(24.45, 20).carbohydrate, 55.55);
+  assert.equal(deriveMacroPercentages(0, 0).carbohydrate, 100);
+  assert.equal(deriveMacroPercentages(60, 40).carbohydrate, 0);
+  for (const [protein, fat] of [[70, 40], [-1, 20], [20, Infinity], [NaN, 20]]) assert.throws(() => deriveMacroPercentages(protein, fat));
 });

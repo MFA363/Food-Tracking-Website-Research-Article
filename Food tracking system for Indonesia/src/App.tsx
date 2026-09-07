@@ -17,6 +17,7 @@ import FoodDiary from "@/pages/FoodDiary";
 import NutritionSummary from "@/pages/NutritionSummary";
 import History from "@/pages/History";
 import Profile from "@/pages/Profile";
+import CaseWorkspace from "@/pages/CaseWorkspace";
 
 // Admin pages
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="/references" element={<References />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/tools" element={<div className="public-tools"><CaseWorkspace /></div>} />
 
             {/* User protected */}
             <Route
@@ -79,6 +81,7 @@ export default function App() {
             />
 
             {/* Admin protected */}
+            <Route path="/case-workspace" element={<ProtectedRoute><Layout><CaseWorkspace /></Layout></ProtectedRoute>} />
             <Route
               path="/admin"
               element={

@@ -1,113 +1,47 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
-import { getAllUsers, getAllLogs } from "@/lib/firebase";
+import { getAllUsers, getAllLogs, getCustomFoods } from "@/lib/firebase";
+import { loadTkpiFoods } from "@/lib/tkpiDatabase";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FOOD_DATABASE } from "@/lib/foodDatabase";
-import type { UserProfile, FoodLogEntry } from "@/lib/types";
+import { localDate } from "@/lib/workspace";
+import Icon, { type IconName } from "@/components/Icon";
+import type { UserProfile, FoodLogEntry, Food } from "@/lib/types";
 
 export default function AdminDashboard() {
-  const { t } = useLanguage();
-  const [users, setUsers] = useState<UserProfile[]>([]);
-  const [logs, setLogs] = useState<FoodLogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  const { lang } = useLanguage(); const tx = (en: string, id: string) => lang === "id" ? id : en;
+  const [users, setUsers] = useState<UserProfile[] | null>(null);
+  const [logs, setLogs] = useState<FoodLogEntry[] | null>(null);
+  const [customFoods, setCustomFoods] = useState<Food[] | null>(null);
+  const [importedFoods, setImportedFoods] = useState<Food[] | null>(null);
+  const [loading, setLoading] = useState(true); const [failed, setFailed] = useState<string[]>([]); const [revision, setRevision] = useState(0);
   useEffect(() => {
-    Promise.all([getAllUsers(), getAllLogs()])
-      .then(([u, l]) => { setUsers(u); setLogs(l); })
-      .finally(() => setLoading(false));
-  }, []);
-
-  // Recent logs (last 10)
-  const recentLogs = [...logs].sort((a, b) => b.loggedAt.localeCompare(a.loggedAt)).slice(0, 10);
-
-  // Stats
-  const today = new Date().toISOString().split("T")[0];
-  const todayLogs = logs.filter((l) => l.date === today);
-  const activeUsers = new Set(todayLogs.map((l) => l.userId)).size;
-
-  const stats = [
-    { label: t("totalUsers"), value: users.length, icon: "👥", color: "var(--primary)" },
-    { label: t("totalLogs"), value: logs.length, icon: "📋", color: "var(--accent)" },
-    { label: "Pengguna Aktif Hari Ini", value: activeUsers, icon: "✅", color: "#3B82F6" },
-    { label: "Database Makanan", value: FOOD_DATABASE.length, icon: "🥗", color: "#8B5CF6" },
+    let active = true; setLoading(true); setFailed([]);
+    Promise.allSettled([getAllUsers(), getAllLogs(), getCustomFoods(), loadTkpiFoods()]).then(([u, l, c, i]) => {
+      if (!active) return;
+      setUsers(u.status === "fulfilled" ? u.value : null); setLogs(l.status === "fulfilled" ? l.value : null);
+      setCustomFoods(c.status === "fulfilled" ? c.value : null); setImportedFoods(i.status === "fulfilled" ? i.value : null);
+      setFailed([u.status === "rejected" ? "users" : "", l.status === "rejected" ? "intake records" : "", c.status === "rejected" ? "custom foods" : "", i.status === "rejected" ? "imported foods" : ""].filter(Boolean)); setLoading(false);
+    });
+    return () => { active = false; };
+  }, [revision]);
+  const today = localDate(); const todayLogs = logs?.filter((entry) => entry.date === today);
+  const metrics: { label: string; value: number | undefined; foot: string; icon: IconName }[] = [
+    { label: tx("Registered profiles", "Profil terdaftar"), value: users?.length, foot: tx("All roles combined", "Semua peran"), icon: "users" },
+    { label: tx("Food entries", "Catatan pangan"), value: logs?.length, foot: tx("All recorded dates", "Semua tanggal tercatat"), icon: "diary" },
+    { label: tx("Active loggers today", "Pencatat aktif hari ini"), value: todayLogs ? new Set(todayLogs.map((entry) => entry.userId)).size : undefined, foot: today, icon: "activity" },
+    { label: tx("Custom foods", "Pangan tambahan"), value: customFoods?.length, foot: tx("Administrator-managed catalogue", "Katalog kelolaan administrator"), icon: "food" },
   ];
-
-  return (
-    <AdminLayout>
-      <div className="space-y-6">
-        {/* Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="rounded-2xl border p-5" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--muted-foreground)" }}>{stat.label}</p>
-                  <p className="font-display font-black text-3xl" style={{ color: stat.color }}>{loading ? "..." : stat.value}</p>
-                </div>
-                <span className="text-2xl">{stat.icon}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Recent user registrations */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-            <div className="px-5 py-4 border-b font-display font-bold" style={{ borderColor: "var(--border)", color: "var(--foreground)" }}>
-              Pengguna Terbaru
-            </div>
-            {loading ? (
-              <div className="p-8 text-center"><div className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin mx-auto" style={{ borderColor: "var(--border)", borderTopColor: "var(--primary)" }} /></div>
-            ) : (
-              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                {users.slice(0, 5).map((u) => (
-                  <div key={u.uid} className="flex items-center justify-between px-5 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>
-                        {u.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm" style={{ color: "var(--foreground)" }}>{u.name}</p>
-                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{u.email}</p>
-                      </div>
-                    </div>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${u.role === "admin" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}>
-                      {u.role}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Recent activity */}
-          <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-            <div className="px-5 py-4 border-b font-display font-bold" style={{ borderColor: "var(--border)", color: "var(--foreground)" }}>
-              {t("recentActivity")}
-            </div>
-            {loading ? (
-              <div className="p-8 text-center"><div className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin mx-auto" style={{ borderColor: "var(--border)", borderTopColor: "var(--primary)" }} /></div>
-            ) : recentLogs.length === 0 ? (
-              <p className="px-5 py-4 text-sm" style={{ color: "var(--muted-foreground)" }}>Belum ada aktivitas.</p>
-            ) : (
-              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                {recentLogs.map((log) => {
-                  const u = users.find((u) => u.uid === log.userId);
-                  return (
-                    <div key={log.id} className="flex items-center justify-between px-5 py-3">
-                      <div>
-                        <p className="font-medium text-sm" style={{ color: "var(--foreground)" }}>{log.foodName}</p>
-                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{u?.name || "User"} · {log.date} · {log.weightGrams}g</p>
-                      </div>
-                      <span className="font-mono text-xs font-semibold" style={{ color: "var(--primary)" }}>{Math.round(log.nutrients.energy)} kkal</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </AdminLayout>
-  );
+  const week = Array.from({ length: 7 }, (_, index) => { const date = new Date(); date.setDate(date.getDate() - (6 - index)); const key = localDate(date); return { date: key, label: date.toLocaleDateString(lang === "id" ? "id-ID" : "en-GB", { weekday: "short" }), count: logs?.filter((entry) => entry.date === key).length || 0 }; });
+  const maximum = Math.max(...week.map((day) => day.count), 1);
+  const recentUsers = users ? [...users].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5) : [];
+  const recentLogs = logs ? [...logs].sort((a, b) => b.loggedAt.localeCompare(a.loggedAt)).slice(0, 5) : [];
+  return <AdminLayout>
+    {failed.length > 0 && <div className="notice error-notice" role="alert"><span>{tx("Could not load", "Tidak dapat memuat")}: {failed.join(", ")}. {tx("Unavailable metrics are not shown as zero.", "Metrik tidak tersedia tidak ditampilkan sebagai nol.")}</span><button className="btn-secondary" disabled={loading} onClick={() => setRevision((value) => value + 1)}><Icon name="refresh" size={16} />{tx("Retry", "Coba lagi")}</button></div>}
+    <div className="stat-grid">{metrics.map((metric, index) => <div className={`stat-card ${index === 0 ? "highlight" : ""}`} key={metric.label}><div className="stat-top"><span>{metric.label}</span><span className="stat-icon"><Icon name={metric.icon} size={17} /></span></div><strong>{loading ? "…" : metric.value === undefined ? "—" : metric.value.toLocaleString()}</strong><span className="stat-foot">{metric.foot}</span></div>)}</div>
+    <div className="admin-split"><section className="panel"><div className="panel-heading"><div><p className="eyebrow">{tx("PLATFORM ACTIVITY", "AKTIVITAS PLATFORM")}</p><h2>{tx("Food entries · last 7 days", "Catatan pangan · 7 hari terakhir")}</h2></div><button className="icon-button" disabled={loading} aria-label={tx("Refresh overview", "Segarkan ringkasan")} onClick={() => setRevision((value) => value + 1)}><Icon name="refresh" size={17} /></button></div>{loading || !logs ? <p role="status" className="muted">{loading ? tx("Loading activity…", "Memuat aktivitas…") : tx("Activity data is unavailable.", "Data aktivitas tidak tersedia.")}</p> : <div className="weekly-bars" aria-label={tx("Daily entry counts", "Jumlah catatan harian")}>{week.map((day) => <div className="week-column" key={day.date} aria-label={`${day.date}: ${day.count}`}><span>{day.count}</span><div><span className="bar" style={{ height: `${day.count / maximum * 100}%` }} /></div><span>{day.label}</span></div>)}</div>}<Link className="btn-text" style={{ display: "inline-block", marginTop: 20 }} to="/admin/logs">{tx("Review intake records", "Tinjau catatan asupan")} →</Link></section>
+    <section className="panel"><p className="eyebrow">{tx("FOOD DATA OVERSIGHT", "PENGAWASAN DATA PANGAN")}</p><h2>{tx("Screened import catalogue", "Katalog impor tersaring")}</h2><div className="data-count"><strong>{loading ? "…" : importedFoods?.length.toLocaleString() ?? "—"}</strong><span>{tx("unique selectable foods", "pangan unik yang dapat dipilih")}</span></div><p className="muted">{tx("Basic plausibility checks and duplicate screening are applied. Passing these checks is not source verification.", "Pemeriksaan kewajaran dasar dan duplikasi diterapkan. Lolos pemeriksaan bukan berarti data telah terverifikasi terhadap sumber.")}</p><div className="planner-actions"><Link className="btn-secondary" to="/admin/foods">{tx("Manage catalogue", "Kelola katalog")}</Link><Link className="btn-text" to="/references">{tx("Review data limitations", "Tinjau batasan data")}</Link></div></section></div>
+    <div className="admin-split"><section className="panel"><div className="panel-heading"><h2>{tx("Recent registrations", "Pendaftaran terbaru")}</h2><Link className="btn-text" to="/admin/users">{tx("All users", "Semua pengguna")} →</Link></div>{loading ? <p className="muted">{tx("Loading…", "Memuat…")}</p> : !users ? <p className="muted">{tx("User data is unavailable.", "Data pengguna tidak tersedia.")}</p> : recentUsers.length === 0 ? <p className="muted">{tx("No user profiles found.", "Belum ada profil pengguna.")}</p> : recentUsers.map((user) => <div className="admin-row" key={user.uid}><span className="avatar">{(user.name || "U").slice(0, 1)}</span><div><strong>{user.name}</strong><small>{user.email}</small></div><span className="pill">{user.role}</span></div>)}</section>
+    <section className="panel"><div className="panel-heading"><h2>{tx("Latest intake records", "Catatan asupan terbaru")}</h2><Icon name="activity" size={18} /></div>{loading ? <p className="muted">{tx("Loading…", "Memuat…")}</p> : !logs ? <p className="muted">{tx("Records are unavailable.", "Catatan tidak tersedia.")}</p> : recentLogs.length === 0 ? <p className="muted">{tx("No intake records yet.", "Belum ada catatan asupan.")}</p> : recentLogs.map((entry) => <div className="admin-row" key={entry.id}><span className="avatar"><Icon name="food" size={16} /></span><div><strong>{entry.foodName}</strong><small>{entry.date} · {entry.weightGrams} g</small></div><span>{Math.round(entry.nutrients.energy)} kcal</span></div>)}</section></div>
+  </AdminLayout>;
 }
