@@ -118,14 +118,14 @@ function generateId(): string {
 // Seed admin account if none exist
 function seedDemoAdmin() {
   const users = getDemoUsers();
-  if (!users.find((u) => u.email === "admin@nutrisiji.id")) {
+  if (!users.find((u) => u.email === "admin@access.id")) {
     const uid = "admin_" + generateId();
-    users.push({ uid, email: "admin@nutrisiji.id", password: "admin123" });
+    users.push({ uid, email: "admin@access.id", password: "admin123" });
     saveDemoUsers(users);
     const profiles = getDemoProfiles();
     profiles[uid] = {
       uid,
-      email: "admin@nutrisiji.id",
+      email: "admin@access.id",
       name: "Administrator",
       role: "admin",
       height: 170,

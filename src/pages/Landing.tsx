@@ -47,7 +47,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>N</div>
-            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>NutriSiji</span>
+            <span className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>NutCal</span>
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -147,8 +147,8 @@ export default function Landing() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             ⚠️ {lang === "id"
-              ? "NutriSiji menampilkan data TKPI 2020 per 100 gram. Nilai aktual dapat berbeda menurut bahan, bagian pangan, dan cara pengolahan. Konsultasikan tenaga kesehatan untuk keputusan klinis."
-              : "NutriSiji displays TKPI 2020 data per 100 grams. Actual values vary by ingredient, edible portion, and preparation. Consult a health professional for clinical decisions."}
+              ? "NutCal menampilkan data TKPI 2020 per 100 gram. Nilai aktual dapat berbeda menurut bahan, bagian pangan, dan cara pengolahan. Konsultasikan tenaga kesehatan untuk keputusan klinis."
+              : "NutCal displays TKPI 2020 data per 100 grams. Actual values vary by ingredient, edible portion, and preparation. Consult a health professional for clinical decisions."}
           </p>
         </div>
       </section>
@@ -175,7 +175,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="border-t py-8" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2025 NutriSiji · Pekalongan, Jawa Tengah, Indonesia</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2025 NutCal · Pekalongan, Jawa Tengah, Indonesia</p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data pangan: TKPI 2020 · Per 100 gram bagian dapat dimakan</p>
         </div>
       </footer>

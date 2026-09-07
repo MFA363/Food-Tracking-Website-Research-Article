@@ -5,6 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { calculateBMI, calculateEnergyRequirement, sumNutrients, getRDI } from "@/lib/calculations";
 import { getUserLogs, deleteFoodLog } from "@/lib/firebase";
 import BMIGauge from "@/components/BMIGauge";
+import MacronutrientCalculator from "@/components/MacronutrientCalculator";
+import { calculateMacroTargets } from "@/lib/macronutrients";
 import NutrientProgress from "@/components/NutrientProgress";
 import FoodSearchModal from "@/components/FoodSearchModal";
 import type { FoodLogEntry, MealType } from "@/lib/types";
@@ -47,6 +49,14 @@ export default function Dashboard() {
   const bmi = calculateBMI(user.weight, user.height);
   const energy = calculateEnergyRequirement(user.weight, user.height, user.age, user.gender, user.activityLevel);
   const rdi = getRDI(user.gender, user.age);
+  if (user.macroPercentages && user.height > 0 && user.weight > 0 && user.age > 0) {
+    try {
+      const targets = calculateMacroTargets(energy.tdee, user.macroPercentages);
+      rdi.carbohydrate = targets.carbohydrate.grams;
+      rdi.protein = targets.protein.grams;
+      rdi.fat = targets.fat.grams;
+    } catch { /* Retain reference values until valid targets are saved. */ }
+  }
   const totals = sumNutrients(logs);
 
   const caloriesPct = Math.min((totals.energy / energy.tdee) * 100, 100);
@@ -157,6 +167,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      <MacronutrientCalculator key={user.uid} tdee={profileIncomplete ? 0 : energy.tdee} />
 
       {/* Insights */}
       {insights.length > 0 && (

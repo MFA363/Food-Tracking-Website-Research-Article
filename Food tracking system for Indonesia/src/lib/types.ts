@@ -5,6 +5,7 @@ export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
 export type Role = "user" | "admin";
 
 export interface UserProfile {
+  macroPercentages?: { carbohydrate: number; protein: number; fat: number };
   uid: string;
   email: string;
   name: string;

@@ -5,7 +5,7 @@ export type TranslationKey = keyof typeof translations.en;
 const translations = {
   en: {
     // App
-    appName: "NutriSiji",
+    appName: "NutCal",
     appTagline: "Your Personal Nutrition Companion",
     appDesc: "Track your food intake, understand your nutrition, and reach your health goals.",
 
@@ -56,7 +56,7 @@ const translations = {
     todayDate: "Today",
     bmi: "BMI",
     bmiCategory: "BMI Category",
-    dailyEnergyNeeds: "Estimated Daily Energy",
+    dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Calories Consumed Today",
     caloriesRemaining: "Estimated Remaining",
     estimatedNote: "Estimated nutritional values based on TKPI 2017 data",
@@ -187,7 +187,7 @@ const translations = {
   },
 
   id: {
-    appName: "NutriSiji",
+    appName: "NutCal",
     appTagline: "Pendamping Gizi Personalmu",
     appDesc: "Catat asupan makananmu, pahami gizimu, dan capai tujuan kesehatanmu.",
 
@@ -234,7 +234,7 @@ const translations = {
     todayDate: "Hari Ini",
     bmi: "IMT",
     bmiCategory: "Kategori IMT",
-    dailyEnergyNeeds: "Estimasi Energi Harian",
+    dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Dikonsumsi Hari Ini",
     caloriesRemaining: "Estimasi Sisa",
     estimatedNote: "Nilai gizi yang diestimasi berdasarkan data TKPI 2017",
@@ -356,7 +356,7 @@ const translations = {
   },
 
   ms: {
-    appName: "NutriSiji",
+    appName: "NutCal",
     appTagline: "Pembantu Pemakanan Peribadi Anda",
     appDesc: "Rekod pengambilan makanan anda, fahami pemakanan anda, dan capai matlamat kesihatan anda.",
 
@@ -403,7 +403,7 @@ const translations = {
     todayDate: "Hari Ini",
     bmi: "BMI",
     bmiCategory: "Kategori BMI",
-    dailyEnergyNeeds: "Anggaran Tenaga Harian",
+    dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Diambil Hari Ini",
     caloriesRemaining: "Anggaran Baki",
     estimatedNote: "Nilai pemakanan yang dianggarkan berdasarkan data TKPI 2017",
@@ -525,7 +525,7 @@ const translations = {
   },
 
   jv: {
-    appName: "NutriSiji",
+    appName: "NutCal",
     appTagline: "Kancamu kanggo Gizi sing Personal",
     appDesc: "Cathetan asupan pangananmu, ngerti gizimu, lan nggayuh tujuan kesehatanmu.",
 
@@ -572,7 +572,7 @@ const translations = {
     todayDate: "Dina Iki",
     bmi: "IMT",
     bmiCategory: "Kategori IMT",
-    dailyEnergyNeeds: "Estimasi Energi Saben Dina",
+    dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "Kalori Dikonsumsi Dina Iki",
     caloriesRemaining: "Estimasi Sisa",
     estimatedNote: "Nilai gizi sing diestimasi adhedhasar data TKPI 2017",
@@ -741,7 +741,7 @@ const translations = {
     todayDate: "اليوم",
     bmi: "مؤشر كتلة الجسم",
     bmiCategory: "فئة مؤشر كتلة الجسم",
-    dailyEnergyNeeds: "الطاقة اليومية المقدرة",
+    dailyEnergyNeeds: "TDEE",
     caloriesConsumed: "السعرات المستهلكة اليوم",
     caloriesRemaining: "الباقي المقدر",
     estimatedNote: "قيم غذائية مقدرة استناداً إلى بيانات TKPI 2017",

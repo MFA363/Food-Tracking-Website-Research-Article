@@ -9,6 +9,10 @@ interface BMIGaugeProps {
 export default function BMIGauge({ bmi }: BMIGaugeProps) {
   const { t } = useLanguage();
 
+  if (!Number.isFinite(bmi.value) || bmi.value <= 0) {
+    return <p className="text-sm py-8" style={{ color: "var(--muted-foreground)" }}>Complete height and weight to calculate BMI.</p>;
+  }
+
   // SVG arc gauge: range 10–40 BMI
   const min = 10, max = 40;
   const clampedBMI = Math.min(Math.max(bmi.value, min), max);

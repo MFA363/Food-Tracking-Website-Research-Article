@@ -210,7 +210,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t mt-auto py-6" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            © 2025 NutriSiji · Dibuat untuk Pekalongan, Jawa Tengah, Indonesia
+            © 2025 NutCal · Dibuat untuk Pekalongan, Jawa Tengah, Indonesia
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
             Data gizi berdasarkan TKPI 2017 · Nilai bersifat estimasi

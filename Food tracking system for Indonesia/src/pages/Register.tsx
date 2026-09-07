@@ -97,7 +97,7 @@ export default function Register() {
       <div className="hidden lg:flex flex-col justify-between w-5/12 p-12" style={{ background: "var(--primary)" }}>
         <Link to="/" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">N</div>
-          <span className="font-display font-bold text-2xl text-white">NutriSiji</span>
+          <span className="font-display font-bold text-2xl text-white">NutCal</span>
         </Link>
         <div className="space-y-8">
           {STEPS.map((s, i) => (

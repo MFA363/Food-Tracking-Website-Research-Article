@@ -203,7 +203,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t mt-auto py-6" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            © 2026 NutriSiji · Platform praktik dan pembelajaran gizi Indonesia
+            © 2026 NutCal · Platform praktik dan pembelajaran gizi Indonesia
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
             Data pangan: TKPI 2020 · Nilai dapat berbeda menurut bahan dan pengolahan

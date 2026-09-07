@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <div>
           <p className="text-white font-display font-black text-lg">{t("adminTitle")}</p>
-          <p className="text-white/60 text-xs">Panel Manajemen NutriSiji</p>
+          <p className="text-white/60 text-xs">Panel Manajemen NutCal</p>
         </div>
       </div>
 
