@@ -35,6 +35,13 @@ export interface Nutrients {
   zinc: number;      // mg
 }
 
+export interface FoodItem {
+  kode: string;
+  nama: string;
+  kategori: string;
+  per100g: Nutrients;
+}
+
 export interface Food {
   id: string;
   name: Record<Language, string>;

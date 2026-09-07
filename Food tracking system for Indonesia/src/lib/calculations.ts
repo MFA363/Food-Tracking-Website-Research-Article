@@ -45,10 +45,10 @@ export function calculateEnergyRequirement(
 
   const activityFactors: Record<ActivityLevel, number> = {
     sedentary: 1.2,
-    light: 1.375,
-    moderate: 1.55,
-    active: 1.725,
-    very_active: 1.9,
+    light: 1.5,
+    moderate: 1.8,
+    active: 1.9,
+    very_active: 2.2,
   };
 
   const activityFactor = activityFactors[activityLevel];

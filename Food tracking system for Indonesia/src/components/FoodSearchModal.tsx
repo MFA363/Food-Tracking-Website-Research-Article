@@ -15,7 +15,14 @@ interface FoodSearchModalProps {
   editEntry?: FoodLogEntry | null;
 }
 
-export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "breakfast", date, editEntry }: FoodSearchModalProps) {
+export default function FoodSearchModal({
+  open,
+  onClose,
+  onAdd,
+  defaultMeal = "breakfast",
+  date,
+  editEntry,
+}: FoodSearchModalProps) {
   const { t, lang } = useLanguage();
   const { user } = useAuth();
 
@@ -24,95 +31,154 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   const [results, setResults] = useState<Food[]>([]);
   const [selected, setSelected] = useState<Food | null>(null);
   const [mealType, setMealType] = useState<MealType>(defaultMeal);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [unitLabel, setUnitLabel] = useState("gram (g)");
   const [unitGrams, setUnitGrams] = useState(100);
-  const [customWeight, setCustomWeight] = useState(100);
+  const [customWeight, setCustomWeight] = useState<number>(100);
   const [useCustomWeight, setUseCustomWeight] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
+
+  const isEditingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Initialize modal state & load Firebase custom foods
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setCategory("all");
-      setSelected(null);
-      setQuantity(1);
-      setUnitLabel("gram (g)");
-      setUnitGrams(100);
-      setCustomWeight(100);
-      setUseCustomWeight(false);
-      setMealType(defaultMeal);
-      setTimeout(() => inputRef.current?.focus(), 100);
-      getCustomFoods().then(setCustomFoods);
+    if (!open) return;
 
-      if (editEntry) {
-        const food = getFoodById(editEntry.foodId);
-        if (food) {
-          setSelected(food);
-          setMealType(editEntry.mealType);
-          setCustomWeight(editEntry.weightGrams);
-          setUseCustomWeight(true);
-          setUnitLabel(editEntry.unit);
-          setUnitGrams(editEntry.unitGrams);
-          setQuantity(editEntry.quantity);
+    let isMounted = true;
+    setQuery("");
+    setCategory("all");
+    setSelected(null);
+    setQuantity(1);
+    setUnitLabel("gram (g)");
+    setUnitGrams(100);
+    setCustomWeight(100);
+    setUseCustomWeight(false);
+    setMealType(defaultMeal);
+    isEditingRef.current = !!editEntry;
+
+    // Delayed auto-focus for mobile rendering ease
+    const focusTimer = setTimeout(() => {
+      if (isMounted) inputRef.current?.focus();
+    }, 100);
+
+    getCustomFoods()
+      .then((fetchedCustomFoods) => {
+        if (!isMounted) return;
+        setCustomFoods(fetchedCustomFoods);
+
+        if (editEntry) {
+          const food =
+            getFoodById(editEntry.foodId) ||
+            fetchedCustomFoods.find((f) => f.id === editEntry.foodId);
+
+          if (food) {
+            setSelected(food);
+            setMealType(editEntry.mealType);
+            setCustomWeight(editEntry.weightGrams || 100);
+            setUnitLabel(editEntry.unit || "gram (g)");
+            setUnitGrams(editEntry.unitGrams || 100);
+            setQuantity(editEntry.quantity || 1);
+            setUseCustomWeight(editEntry.unit === "gram (g)" || !editEntry.unit);
+          }
         }
-      }
-    }
+      })
+      .catch((err) => {
+        console.error("Failed to load custom foods:", err);
+      });
+
+    return () => {
+      isMounted = false;
+      clearTimeout(focusTimer);
+    };
   }, [open, defaultMeal, editEntry]);
 
+  // Filter foods by query & selected category
   useEffect(() => {
-    const allFoods = [...searchFoods(query, lang, category), ...customFoods.filter(f =>
-      (!query || f.name[lang]?.toLowerCase().includes(query.toLowerCase()) || f.name.en.toLowerCase().includes(query.toLowerCase())) &&
-      (category === "all" || f.category === category)
-    )];
-    setResults(allFoods.slice(0, 20));
+    const q = query.toLowerCase().trim();
+    const localResults = searchFoods(query, lang, category);
+
+    const customResults = customFoods.filter((f) => {
+      const matchCategory = category === "all" || f.category === category;
+      const matchName =
+        !q ||
+        f.name[lang]?.toLowerCase().includes(q) ||
+        f.name.id?.toLowerCase().includes(q) ||
+        f.name.en?.toLowerCase().includes(q);
+      return matchCategory && matchName;
+    });
+
+    const localIds = new Set(localResults.map((r) => r.id));
+    const combined = [
+      ...localResults,
+      ...customResults.filter((f) => !localIds.has(f.id)),
+    ];
+
+    setResults(combined.slice(0, 20));
   }, [query, category, lang, customFoods]);
 
+  // Configure default units on selection (skips overwrite during edit mode initialization)
   useEffect(() => {
-    if (selected) {
-      const defaultUnits = getUnitsForFood(selected);
-      if (defaultUnits.length > 0) {
-        setUnitLabel(defaultUnits[0].label);
-        setUnitGrams(defaultUnits[0].grams);
-        setCustomWeight(defaultUnits[0].grams);
-      }
+    if (!selected) return;
+
+    if (isEditingRef.current) {
+      isEditingRef.current = false;
+      return;
+    }
+
+    const defaultUnits = getUnitsForFood(selected);
+    if (defaultUnits.length > 0) {
+      setUnitLabel(defaultUnits[0].label);
+      setUnitGrams(defaultUnits[0].grams);
+      setCustomWeight(defaultUnits[0].grams);
     }
   }, [selected]);
 
   function getUnitsForFood(food: Food) {
-    const key = food.defaultUnit;
+    const key = food.defaultUnit || "porsi";
     const specificUnits = FOOD_UNITS[key] || [];
-    const defaultUnits = FOOD_UNITS.default;
+    const defaultUnits = FOOD_UNITS.default || [];
     return [...specificUnits, ...defaultUnits];
   }
 
-  const totalGrams = useCustomWeight ? customWeight : quantity * unitGrams;
-  const calculatedNutrients = selected ? calculateFoodNutrients(selected.nutrients, totalGrams) : null;
+  function getFoodName(food: Food): string {
+    return food.name[lang] || food.name.id || food.name.en || "";
+  }
+
+  const totalGrams = useCustomWeight
+    ? Math.max(0, customWeight || 0)
+    : Math.max(0, (quantity || 0) * (unitGrams || 0));
+
+  const calculatedNutrients = selected
+    ? calculateFoodNutrients(selected.nutrients, totalGrams)
+    : null;
 
   const handleAdd = async () => {
-    if (!selected || !user) return;
+    if (!selected || !user || totalGrams <= 0) return;
     setSaving(true);
+
     try {
-      const entry: Omit<FoodLogEntry, "id"> = {
+      const entry: Omit<FoodLogEntry, "id"> & { id?: string } = {
+        ...(editEntry?.id ? { id: editEntry.id } : {}),
         userId: user.uid,
         foodId: selected.id,
-        foodName: selected.name[lang] || selected.name.id || selected.name.en,
+        foodName: getFoodName(selected),
         date,
         mealType,
         weightGrams: totalGrams,
-        unit: unitLabel,
-        unitGrams,
-        quantity,
+        unit: useCustomWeight ? "gram (g)" : unitLabel,
+        unitGrams: useCustomWeight ? 1 : unitGrams,
+        quantity: useCustomWeight ? customWeight : quantity,
         nutrients: calculatedNutrients!,
-        loggedAt: new Date().toISOString(),
+        loggedAt: editEntry?.loggedAt || new Date().toISOString(),
       };
+
       const saved = await addFoodLog(entry);
       onAdd(saved);
       onClose();
     } catch (err) {
-      console.error(err);
+      console.error("Failed to add or update food log:", err);
     } finally {
       setSaving(false);
     }
@@ -127,36 +193,44 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
         className="relative w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ background: "var(--card)", maxHeight: "90vh" }}
       >
-        {/* Header */}
+        {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
           <h3 className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>
-            {selected ? selected.name[lang] || selected.name.id : t("addFood")}
+            {selected ? getFoodName(selected) : t("addFood")}
           </h3>
           <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted transition-all" style={{ color: "var(--muted-foreground)" }}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         <div className="overflow-y-auto flex-1">
           {!selected ? (
             <div className="p-4 space-y-3">
-              {/* Meal type selector */}
+              {/* Meal Selector */}
               <div className="grid grid-cols-4 gap-1 p-1 rounded-xl" style={{ background: "var(--muted)" }}>
                 {(["breakfast", "lunch", "dinner", "snack"] as MealType[]).map((m) => (
                   <button
                     key={m}
                     onClick={() => setMealType(m)}
                     className="py-1.5 rounded-lg text-xs font-medium transition-all"
-                    style={mealType === m ? { background: "var(--primary)", color: "var(--primary-foreground)" } : { color: "var(--muted-foreground)" }}
+                    style={
+                      mealType === m
+                        ? { background: "var(--primary)", color: "var(--primary-foreground)" }
+                        : { color: "var(--muted-foreground)" }
+                    }
                   >
                     {t(m)}
                   </button>
                 ))}
               </div>
 
-              {/* Search input */}
+              {/* Search Bar */}
               <div className="relative">
-                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--muted-foreground)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--muted-foreground)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
                 <input
                   ref={inputRef}
                   type="text"
@@ -164,11 +238,11 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={t("searchFood")}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2"
-                  style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)", "--tw-ring-color": "var(--primary)" } as React.CSSProperties}
+                  style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
                 />
               </div>
 
-              {/* Category filter */}
+              {/* Category Pills */}
               <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
                 {FOOD_CATEGORIES.map((cat) => (
                   <button
@@ -186,10 +260,12 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                 ))}
               </div>
 
-              {/* Results */}
+              {/* Food List */}
               <div className="space-y-1">
                 {results.length === 0 ? (
-                  <p className="text-center py-8 text-sm" style={{ color: "var(--muted-foreground)" }}>Tidak ada makanan ditemukan</p>
+                  <p className="text-center py-8 text-sm" style={{ color: "var(--muted-foreground)" }}>
+                    Tidak ada makanan ditemukan
+                  </p>
                 ) : (
                   results.map((food) => (
                     <button
@@ -199,10 +275,16 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                       style={{ borderColor: "var(--border)" }}
                     >
                       <div>
-                        <p className="font-medium text-sm" style={{ color: "var(--foreground)" }}>{food.name[lang] || food.name.id}</p>
-                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{food.nutrients.energy} kkal / 100g</p>
+                        <p className="font-medium text-sm" style={{ color: "var(--foreground)" }}>
+                          {getFoodName(food)}
+                        </p>
+                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
+                          {food.nutrients?.energy ?? 0} kkal / 100g
+                        </p>
                       </div>
-                      <svg className="w-4 h-4 flex-shrink-0" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      <svg className="w-4 h-4 flex-shrink-0" style={{ color: "var(--primary)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </button>
                   ))
                 )}
@@ -210,21 +292,25 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
             </div>
           ) : (
             <div className="p-4 space-y-4">
-              {/* Back */}
+              {/* Back to List */}
               <button onClick={() => setSelected(null)} className="flex items-center gap-2 text-sm font-medium hover:opacity-75 transition-all" style={{ color: "var(--primary)" }}>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
                 {t("back")}
               </button>
 
-              {/* Food info */}
+              {/* Selected Food Macro Card */}
               <div className="p-4 rounded-xl" style={{ background: "var(--muted)" }}>
-                <h4 className="font-display font-bold" style={{ color: "var(--foreground)" }}>{selected.name[lang] || selected.name.id}</h4>
+                <h4 className="font-display font-bold" style={{ color: "var(--foreground)" }}>
+                  {getFoodName(selected)}
+                </h4>
                 <div className="grid grid-cols-4 gap-2 mt-3">
                   {[
-                    { label: "Energi", value: `${selected.nutrients.energy}`, unit: "kkal" },
-                    { label: "Protein", value: `${selected.nutrients.protein}`, unit: "g" },
-                    { label: "Lemak", value: `${selected.nutrients.fat}`, unit: "g" },
-                    { label: "Karbo", value: `${selected.nutrients.carbohydrate}`, unit: "g" },
+                    { label: "Energi", value: `${selected.nutrients?.energy ?? 0}`, unit: "kkal" },
+                    { label: "Protein", value: `${selected.nutrients?.protein ?? 0}`, unit: "g" },
+                    { label: "Lemak", value: `${selected.nutrients?.fat ?? 0}`, unit: "g" },
+                    { label: "Karbo", value: `${selected.nutrients?.carbohydrate ?? 0}`, unit: "g" },
                   ].map((n) => (
                     <div key={n.label} className="text-center p-2 rounded-lg" style={{ background: "var(--card)" }}>
                       <p className="font-mono text-xs font-bold" style={{ color: "var(--primary)" }}>{n.value}</p>
@@ -236,7 +322,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                 <p className="text-xs mt-2" style={{ color: "var(--muted-foreground)" }}>per 100g</p>
               </div>
 
-              {/* Meal type */}
+              {/* Meal Category Select */}
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("mealTime")}</label>
                 <div className="grid grid-cols-4 gap-1 p-1 rounded-xl" style={{ background: "var(--muted)" }}>
@@ -248,7 +334,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                 </div>
               </div>
 
-              {/* Weight input toggle */}
+              {/* Serving Input / Custom Weight Toggle */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{t("quantity")}</label>
@@ -266,8 +352,8 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                     <input
                       type="number"
                       min="1"
-                      value={customWeight}
-                      onChange={(e) => setCustomWeight(Number(e.target.value))}
+                      value={customWeight || ""}
+                      onChange={(e) => setCustomWeight(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="flex-1 px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2"
                       style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
                     />
@@ -277,10 +363,10 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      min="0.5"
+                      min="0.1"
                       step="0.5"
-                      value={quantity}
-                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      value={quantity || ""}
+                      onChange={(e) => setQuantity(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-20 px-3 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 text-center"
                       style={{ background: "var(--background)", borderColor: "var(--border)", color: "var(--foreground)" }}
                     />
@@ -302,7 +388,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
                 )}
               </div>
 
-              {/* Calculated total */}
+              {/* Dynamic Nutrient Calculations */}
               {calculatedNutrients && (
                 <div className="p-4 rounded-xl border" style={{ borderColor: "var(--primary)", background: "var(--secondary)" }}>
                   <p className="text-sm font-semibold mb-2" style={{ color: "var(--secondary-foreground)" }}>
@@ -320,7 +406,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
           )}
         </div>
 
-        {/* Footer */}
+        {/* Modal Submit Footer */}
         {selected && (
           <div className="px-5 py-4 border-t" style={{ borderColor: "var(--border)" }}>
             <button
