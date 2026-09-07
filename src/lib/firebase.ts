@@ -1,13 +1,5 @@
 /**
- * Firebase integration with localStorage demo fallback.
- *
- * To connect Firebase:
- * 1. Create a project at https://console.firebase.google.com
- * 2. Enable Authentication (Email/Password) and Firestore
- * 3. Copy your config to .env file (see .env.example)
- * 4. Set VITE_FIREBASE_PROJECT_ID (and other vars) to your real values
- *
- * Without env vars the app runs in DEMO MODE using localStorage.
+ * Firebase Authentication and Firestore integration.
  */
 
 import { initializeApp, type FirebaseApp } from "firebase/app";
@@ -115,35 +107,6 @@ function saveDemoFoods(foods: Food[]) {
 function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
-
-// Seed admin account if none exist
-function seedDemoAdmin() {
-  const users = getDemoUsers();
-  if (!users.find((u) => u.email === "admin@nutrisiji.id")) {
-    const uid = "admin_" + generateId();
-    users.push({ uid, email: "admin@nutrisiji.id", password: "admin123" });
-    saveDemoUsers(users);
-    const profiles = getDemoProfiles();
-    profiles[uid] = {
-      uid,
-      email: "admin@nutrisiji.id",
-      name: "Administrator",
-      role: "admin",
-      height: 170,
-      weight: 65,
-      age: 30,
-      gender: "male",
-      job: "Administrator",
-      activityLevel: "moderate",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      language: "id",
-    };
-    saveDemoProfiles(profiles);
-  }
-}
-
-seedDemoAdmin();
 
 // ── Unified API ─────────────────────────────────────────────────────
 

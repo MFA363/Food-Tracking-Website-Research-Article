@@ -131,12 +131,6 @@ export default function Login() {
             </Link>
           </p>
 
-          {/* Demo hint */}
-          <div className="mt-6 p-4 rounded-xl border" style={{ background: "var(--muted)", borderColor: "var(--border)" }}>
-            <p className="text-xs font-semibold mb-1" style={{ color: "var(--foreground)" }}>Mode Demo:</p>
-            <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Admin: <strong>admin@nutrisiji.id</strong> / <strong>admin123</strong></p>
-            <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Atau daftar akun baru sebagai pengguna</p>
-          </div>
         </div>
       </div>
     </div>

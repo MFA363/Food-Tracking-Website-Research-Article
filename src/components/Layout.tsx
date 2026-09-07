@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LANGUAGES } from "@/lib/translations";
-import { FIREBASE_CONFIGURED } from "@/lib/firebase";
 import type { Language } from "@/lib/types";
 
 const NAV_ICON = {
@@ -67,12 +66,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
-      {/* Demo mode banner */}
-      {!FIREBASE_CONFIGURED && (
-        <div className="text-center py-1.5 text-xs font-medium" style={{ background: "var(--accent)", color: "var(--accent-foreground)" }}>
-          {t("demoMode")} · {t("demoModeNote")}
-        </div>
-      )}
 
       {/* Top navbar */}
       <nav className="sticky top-0 z-40 border-b" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
@@ -210,10 +203,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t mt-auto py-6" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            © 2025 NutriSiji · Dibuat untuk Pekalongan, Jawa Tengah, Indonesia
+            © 2026 NutriSiji · Platform praktik dan pembelajaran gizi Indonesia
           </p>
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Data gizi berdasarkan TKPI 2017 · Nilai bersifat estimasi
+            Data pangan: TKPI 2020 · Nilai dapat berbeda menurut bahan dan pengolahan
           </p>
         </div>
       </footer>

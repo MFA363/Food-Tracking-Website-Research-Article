@@ -42,6 +42,8 @@ export default function Dashboard() {
 
   if (!user) return null;
 
+  const profileIncomplete = !user.name || !user.height || !user.weight || !user.age || !user.job;
+
   const bmi = calculateBMI(user.weight, user.height);
   const energy = calculateEnergyRequirement(user.weight, user.height, user.age, user.gender, user.activityLevel);
   const rdi = getRDI(user.gender, user.age);
@@ -77,6 +79,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {profileIncomplete && (
+        <section className="flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between" style={{ background: "var(--secondary)", borderColor: "var(--border)" }}>
+          <div><h2 className="font-display font-bold" style={{ color: "var(--secondary-foreground)" }}>Lengkapi profil untuk perhitungan personal</h2><p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>Masukkan data antropometri, aktivitas, dan peran profesional Anda sebelum menggunakan rekomendasi kebutuhan energi.</p></div>
+          <Link to="/profile" className="shrink-0 rounded-lg px-4 py-2 text-sm font-semibold" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>Lengkapi profil</Link>
+        </section>
+      )}
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { searchFoods, FOOD_CATEGORIES, FOOD_UNITS, getFoodById } from "@/lib/foodDatabase";
+import { loadTkpiFoods, searchTkpiFoods } from "@/lib/tkpiDatabase";
 import { calculateFoodNutrients } from "@/lib/calculations";
 import { addFoodLog, getCustomFoods } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,6 +32,8 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   const [useCustomWeight, setUseCustomWeight] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
+  const [tkpiFoods, setTkpiFoods] = useState<Food[]>([]);
+  const [dataError, setDataError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
       setMealType(defaultMeal);
       setTimeout(() => inputRef.current?.focus(), 100);
       getCustomFoods().then(setCustomFoods);
+      loadTkpiFoods().then(setTkpiFoods).catch(() => setDataError("Database TKPI 2020 tidak dapat dimuat. Coba muat ulang halaman."));
 
       if (editEntry) {
         const food = getFoodById(editEntry.foodId);
@@ -63,12 +67,13 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   }, [open, defaultMeal, editEntry]);
 
   useEffect(() => {
-    const allFoods = [...searchFoods(query, lang, category), ...customFoods.filter(f =>
+    const localFoods = [...searchFoods(query, lang, category), ...customFoods.filter(f =>
       (!query || f.name[lang]?.toLowerCase().includes(query.toLowerCase()) || f.name.en.toLowerCase().includes(query.toLowerCase())) &&
       (category === "all" || f.category === category)
     )];
-    setResults(allFoods.slice(0, 20));
-  }, [query, category, lang, customFoods]);
+    const officialFoods = category === "all" ? searchTkpiFoods(tkpiFoods, query) : [];
+    setResults([...localFoods, ...officialFoods].slice(0, 20));
+  }, [query, category, lang, customFoods, tkpiFoods]);
 
   useEffect(() => {
     if (selected) {
@@ -188,6 +193,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
 
               {/* Results */}
               <div className="space-y-1">
+                {dataError && <p className="rounded-lg px-3 py-2 text-xs" style={{ background: "#FEF2F2", color: "#B91C1C" }}>{dataError}</p>}
                 {results.length === 0 ? (
                   <p className="text-center py-8 text-sm" style={{ color: "var(--muted-foreground)" }}>Tidak ada makanan ditemukan</p>
                 ) : (

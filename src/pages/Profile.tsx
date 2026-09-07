@@ -132,7 +132,14 @@ export default function Profile() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("job")}</label>
-          <input type="text" value={form.job} onChange={(e) => set("job", e.target.value)} className={inputClass} style={inputStyle} />
+          <select value={form.job} onChange={(e) => set("job", e.target.value)} className={inputClass} style={inputStyle}>
+            <option value="">Pilih peran</option>
+            <option value="Mahasiswa gizi">Mahasiswa gizi</option>
+            <option value="Nutrisionis dalam pelatihan">Nutrisionis dalam pelatihan</option>
+            <option value="Nutrisionis profesional">Nutrisionis profesional</option>
+            <option value="Calon nutrisionis">Calon nutrisionis</option>
+            <option value="Dosen atau pengajar gizi">Dosen atau pengajar gizi</option>
+          </select>
         </div>
         <div>
           <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("activityLevel")}</label>

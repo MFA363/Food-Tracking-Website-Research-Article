@@ -8,7 +8,7 @@ const FEATURES = [
   {
     icon: "🥗",
     title: { id: "Pantau Asupan Gizi", en: "Track Nutritional Intake" },
-    desc: { id: "Catat setiap makanan dan minuman yang Anda konsumsi dengan mudah dan akurat.", en: "Log every meal with detailed nutritional breakdowns from TKPI 2017 data." },
+    desc: { id: "Catat setiap makanan dan minuman dengan rincian zat gizi per porsi.", en: "Log every meal with detailed nutritional breakdowns from TKPI 2020 data." },
   },
   {
     icon: "📊",
@@ -33,7 +33,7 @@ const FEATURES = [
   {
     icon: "🏥",
     title: { id: "Berbasis Data Ilmiah", en: "Science-Based Data" },
-    desc: { id: "Data gizi dari TKPI 2017 (Tabel Komposisi Pangan Indonesia) yang terstandarisasi.", en: "Nutritional data from the official Indonesian Food Composition Table (TKPI 2017)." },
+    desc: { id: "Data pangan dari TKPI 2020 (Tabel Komposisi Pangan Indonesia).", en: "Food data from the Indonesian Food Composition Table (TKPI 2020)." },
   },
 ];
 
@@ -95,9 +95,6 @@ export default function Landing() {
               {t("loginBtn")}
             </Link>
           </div>
-          <p className="mt-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
-            Demo: gunakan email <strong>admin@nutrisiji.id</strong> / password <strong>admin123</strong>
-          </p>
         </div>
       </section>
 
@@ -106,7 +103,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
             {[
-              { value: "40+", label: lang === "id" ? "Jenis Makanan Indonesia" : "Indonesian Foods" },
+              { value: "1.900+", label: lang === "id" ? "Entri pangan Indonesia" : "Indonesian food entries" },
               { value: "12", label: lang === "id" ? "Nutrisi Dipantau" : "Nutrients Tracked" },
               { value: "5", label: lang === "id" ? "Bahasa Tersedia" : "Languages Available" },
               { value: "TKPI", label: lang === "id" ? "Sumber Data Gizi" : "Data Source" },
@@ -150,8 +147,8 @@ export default function Landing() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             ⚠️ {lang === "id"
-              ? "NutriSiji menampilkan estimasi nilai gizi berdasarkan TKPI 2017. Nilai sebenarnya dapat berbeda. Konsultasikan dengan ahli gizi untuk saran medis."
-              : "NutriSiji displays estimated nutritional values based on TKPI 2017. Actual values may differ. Consult a nutritionist for medical advice."}
+              ? "NutriSiji menampilkan data TKPI 2020 per 100 gram. Nilai aktual dapat berbeda menurut bahan, bagian pangan, dan cara pengolahan. Konsultasikan tenaga kesehatan untuk keputusan klinis."
+              : "NutriSiji displays TKPI 2020 data per 100 grams. Actual values vary by ingredient, edible portion, and preparation. Consult a health professional for clinical decisions."}
           </p>
         </div>
       </section>
@@ -179,7 +176,7 @@ export default function Landing() {
       <footer className="border-t py-8" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>© 2025 NutriSiji · Pekalongan, Jawa Tengah, Indonesia</p>
-          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data gizi: TKPI 2017 · Nilai bersifat estimasi</p>
+          <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Data pangan: TKPI 2020 · Per 100 gram bagian dapat dimakan</p>
         </div>
       </footer>
     </div>
