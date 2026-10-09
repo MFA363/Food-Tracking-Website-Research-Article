@@ -1,4 +1,6 @@
 import React from "react";
+import AppErrorBoundary from "@/components/AppErrorBoundary";
+import { FIREBASE_CONFIGURED } from "@/lib/firebase";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -27,6 +29,8 @@ import AdminLogs from "@/pages/admin/AdminLogs";
 
 export default function App() {
   return (
+    <AppErrorBoundary>
+    {!FIREBASE_CONFIGURED && <p role="alert" className="notice">Cloud services are not configured. Account access and cloud saving are unavailable. Public calculators remain available.</p>}
     <LanguageProvider>
       <AuthProvider>
         <BrowserRouter>
@@ -121,5 +125,6 @@ export default function App() {
         </BrowserRouter>
       </AuthProvider>
     </LanguageProvider>
+    </AppErrorBoundary>
   );
 }

@@ -1,3 +1,4 @@
+import { localDate } from "@/lib/workspace";
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -6,7 +7,7 @@ import { sumNutrients } from "@/lib/calculations";
 import FoodSearchModal from "@/components/FoodSearchModal";
 import type { FoodLogEntry, MealType } from "@/lib/types";
 
-function todayStr() { return new Date().toISOString().split("T")[0]; }
+function todayStr() { return localDate(); }
 
 const MEAL_COLORS: Record<MealType, string> = {
   breakfast: "#F59E0B", lunch: "#16a34a", dinner: "#3B82F6", snack: "#A855F7",
@@ -21,6 +22,8 @@ export default function FoodDiary() {
   const [date, setDate] = useState(todayStr());
   const [logs, setLogs] = useState<FoodLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [retry, setRetry] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [defaultMeal, setDefaultMeal] = useState<MealType>("breakfast");
   const [filterMeal, setFilterMeal] = useState<MealType | "all">("all");
@@ -31,14 +34,18 @@ export default function FoodDiary() {
 
   useEffect(() => {
     if (!user) return;
-    setLoading(true);
-    getUserLogs(user.uid, date).then(setLogs).finally(() => setLoading(false));
-  }, [user, date]);
+    let active = true;
+    setLoading(true); setLoadError(""); setLogs([]);
+    getUserLogs(user.uid, date).then((data) => { if (active) setLogs(data); }).catch(() => { if (active) setLoadError("Records could not be loaded. Check your connection and retry."); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [user?.uid, date, retry]);
 
   const handleAdd = (entry: FoodLogEntry) => setLogs((prev) => [...prev, entry]);
   const handleDelete = async (id: string) => {
-    await deleteFoodLog(id);
-    setLogs((prev) => prev.filter((l) => l.id !== id));
+    try {
+      await deleteFoodLog(id);
+      setLogs((prev) => prev.filter((l) => l.id !== id));
+    } catch { setLoadError("Entry could not be deleted. Retry to reload your records."); }
   };
 
   const openCamera = async () => {
@@ -53,6 +60,8 @@ export default function FoodDiary() {
       setCameraOpen(false);
     }
   };
+
+  useEffect(() => () => { stream?.getTracks().forEach((track) => track.stop()); }, [stream]);
 
   const capturePhoto = () => {
     if (!videoRef.current) return;
@@ -81,6 +90,8 @@ export default function FoodDiary() {
     dinner: logs.filter((l) => l.mealType === "dinner"),
     snack: logs.filter((l) => l.mealType === "snack"),
   };
+
+  if (loadError) return <div role="alert" className="notice"><p>{loadError}</p><button className="btn-secondary" onClick={() => setRetry((value) => value + 1)}>Retry</button></div>;
 
   return (
     <div className="space-y-6">

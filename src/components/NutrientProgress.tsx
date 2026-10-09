@@ -2,13 +2,14 @@ import React from "react";
 
 interface NutrientProgressProps {
   label: string;
-  value: number;
+  value: number | null;
   rdi: number;
   unit: string;
   color?: string;
 }
 
 export default function NutrientProgress({ label, value, rdi, unit, color = "var(--primary)" }: NutrientProgressProps) {
+  if (value == null) return <div className="flex justify-between gap-3 text-sm"><span>{label}</span><span className="text-muted-foreground">Incomplete data</span></div>;
   const pct = rdi > 0 ? Math.min((value / rdi) * 100, 100) : 0;
   const over = rdi > 0 && value > rdi;
 

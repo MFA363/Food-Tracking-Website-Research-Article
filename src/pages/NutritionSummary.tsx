@@ -1,3 +1,4 @@
+import { localDate } from "@/lib/workspace";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -7,7 +8,7 @@ import NutrientProgress from "@/components/NutrientProgress";
 import { calculateMacroTargets } from "@/lib/macronutrients";
 import type { FoodLogEntry, Nutrients } from "@/lib/types";
 
-function todayStr() { return new Date().toISOString().split("T")[0]; }
+function todayStr() { return localDate(); }
 
 export default function NutritionSummary() {
   const { user } = useAuth();
@@ -15,13 +16,17 @@ export default function NutritionSummary() {
   const [date, setDate] = useState(todayStr());
   const [logs, setLogs] = useState<FoodLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [retry, setRetry] = useState(0);
   const [tab, setTab] = useState<"macros" | "micros" | "byMeal" | "byFood">("macros");
 
   useEffect(() => {
     if (!user) return;
-    setLoading(true);
-    getUserLogs(user.uid, date).then(setLogs).finally(() => setLoading(false));
-  }, [user, date]);
+    let active = true;
+    setLoading(true); setLoadError(""); setLogs([]);
+    getUserLogs(user.uid, date).then((data) => { if (active) setLogs(data); }).catch(() => { if (active) setLoadError("Records could not be loaded. Check your connection and retry."); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [user?.uid, date, retry]);
 
   if (!user) return null;
 
@@ -63,6 +68,8 @@ export default function NutritionSummary() {
   };
 
   const MEAL_COLORS = { breakfast: "#F59E0B", lunch: "#16a34a", dinner: "#3B82F6", snack: "#A855F7" };
+
+  if (loadError) return <div role="alert" className="notice"><p>{loadError}</p><button className="btn-secondary" onClick={() => setRetry((value) => value + 1)}>Retry</button></div>;
 
   return (
     <div className="space-y-6">
@@ -134,7 +141,7 @@ export default function NutritionSummary() {
                   <NutrientProgress
                     key={n.key}
                     label={n.label}
-                    value={Math.round((totals[n.key] as number) * 100) / 100}
+                    value={totals[n.key]}
                     rdi={n.key === "energy" ? energy.tdee : rdi[n.key] as number}
                     unit={n.unit}
                     color={n.color}
@@ -149,7 +156,7 @@ export default function NutritionSummary() {
                   <NutrientProgress
                     key={n.key}
                     label={n.label}
-                    value={Math.round((totals[n.key] as number) * 100) / 100}
+                    value={totals[n.key]}
                     rdi={rdi[n.key] as number}
                     unit={n.unit}
                     color={n.color}

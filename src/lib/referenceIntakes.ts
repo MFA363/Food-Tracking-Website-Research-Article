@@ -8,7 +8,7 @@ const adultRows = {
   female: [[2250,60,65,360,32,1500], [2150,60,60,340,30,1500], [1800,60,50,280,25,1400], [1550,58,45,230,22,1200], [1400,58,40,200,20,1000]],
 };
 
-export function adultReferenceIntakes(gender: Gender, age: number): Nutrients {
+export function adultReferenceIntakes(gender: Gender, age: number): { [K in keyof Nutrients]: number } {
   if (!Number.isFinite(age) || age < 19 || age > 120) {
     // Zero means no supported comparison target, not zero nutritional need.
     return { energy:0, protein:0, fat:0, carbohydrate:0, fiber:0, calcium:0, phosphorus:0, iron:0, sodium:0, potassium:0, copper:0, zinc:0 };

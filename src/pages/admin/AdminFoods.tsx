@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
 import { getCustomFoods, addCustomFood, deleteCustomFood, updateCustomFood } from "@/lib/firebase";
-import { FOOD_DATABASE, FOOD_CATEGORIES } from "@/lib/foodDatabase";
+import { FOOD_CATEGORIES } from "@/lib/foodDatabase";
+import { loadTkpiFoods } from "@/lib/tkpiDatabase";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Food, Nutrients } from "@/lib/types";
 
@@ -10,7 +11,9 @@ const EMPTY_NUTRIENTS: Nutrients = { energy: 0, protein: 0, fat: 0, carbohydrate
 export default function AdminFoods() {
   const { t } = useLanguage();
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
+  const [catalogue, setCatalogue] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [editing, setEditing] = useState<Food | null>(null);
@@ -23,9 +26,13 @@ export default function AdminFoods() {
     nameId: "", nameEn: "", category: "grains", defaultUnit: "porsi", defaultWeight: 100, nutrients: { ...EMPTY_NUTRIENTS },
   });
 
-  useEffect(() => { getCustomFoods().then(setCustomFoods).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    Promise.all([getCustomFoods(), loadTkpiFoods()]).then(([custom, imported]) => { setCustomFoods(custom); setCatalogue(imported); })
+      .catch(() => setError("Food data could not be loaded. Check your connection and permissions, then reload."))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const allFoods = showSource === "builtin" ? FOOD_DATABASE : customFoods;
+  const allFoods = showSource === "builtin" ? catalogue : customFoods;
   const filtered = allFoods.filter((f) => {
     const matchCat = catFilter === "all" || f.category === catFilter;
     const matchSearch = !search || f.name.id?.toLowerCase().includes(search.toLowerCase()) || f.name.en?.toLowerCase().includes(search.toLowerCase());
@@ -36,7 +43,9 @@ export default function AdminFoods() {
 
   const handleSave = async () => {
     if (!form.nameId) { alert("Nama (Indonesia) wajib diisi."); return; }
-    setSaving(true);
+    if (!Number.isFinite(form.defaultWeight) || form.defaultWeight <= 0 || !Object.values(form.nutrients).every((value) => Number.isFinite(value) && value >= 0)) { setError("Enter valid non-negative nutrient values and a positive serving weight."); return; }
+    setSaving(true); setError("");
+    try {
     const id = "custom_" + Date.now();
     const food: Food = {
       id: editing?.id || id,
@@ -58,6 +67,8 @@ export default function AdminFoods() {
     setShowForm(false);
     setEditing(null);
     setForm({ nameId: "", nameEn: "", category: "grains", defaultUnit: "porsi", defaultWeight: 100, nutrients: { ...EMPTY_NUTRIENTS } });
+    } catch { setError("Food could not be saved. Check permissions and retry."); }
+    finally { setSaving(false); }
   };
 
   const handleEdit = (food: Food) => {
@@ -74,9 +85,8 @@ export default function AdminFoods() {
   };
 
   const handleDelete = async (id: string) => {
-    await deleteCustomFood(id);
-    setCustomFoods((prev) => prev.filter((f) => f.id !== id));
-    setConfirmDelete(null);
+    try { await deleteCustomFood(id); setCustomFoods((prev) => prev.filter((f) => f.id !== id)); setConfirmDelete(null); }
+    catch { setError("Food could not be deleted. Please retry."); }
   };
 
   const NUTRIENT_FIELDS: { key: keyof Nutrients; label: string; unit: string }[] = [
@@ -99,6 +109,7 @@ export default function AdminFoods() {
   return (
     <AdminLayout>
       <div className="space-y-4">
+        {error && <p role="alert" className="error-text">{error}</p>}
         {/* Controls */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
@@ -119,7 +130,7 @@ export default function AdminFoods() {
         {/* Source toggle */}
         <div className="flex gap-1 w-fit p-1 rounded-xl" style={{ background: "var(--muted)" }}>
           <button onClick={() => setShowSource("builtin")} className="px-4 py-2 rounded-lg text-sm font-medium" style={showSource === "builtin" ? { background: "var(--card)", color: "var(--foreground)" } : { color: "var(--muted-foreground)" }}>
-            Database Bawaan ({FOOD_DATABASE.length})
+            TKPI screened catalogue ({catalogue.length})
           </button>
           <button onClick={() => setShowSource("custom")} className="px-4 py-2 rounded-lg text-sm font-medium" style={showSource === "custom" ? { background: "var(--card)", color: "var(--foreground)" } : { color: "var(--muted-foreground)" }}>
             Makanan Kustom ({customFoods.length})
@@ -205,7 +216,7 @@ export default function AdminFoods() {
                 {NUTRIENT_FIELDS.map((n) => (
                   <div key={n.key}>
                     <label className="block text-xs font-medium mb-1" style={{ color: "var(--foreground)" }}>{n.label} ({n.unit})</label>
-                    <input type="number" min="0" step="0.01" value={form.nutrients[n.key]} onChange={(e) => setN(n.key, e.target.value)} className="w-full px-3 py-2.5 rounded-xl border text-sm font-mono" style={inputStyle} />
+                    <input type="number" min="0" step="0.01" value={form.nutrients[n.key] ?? ''} onChange={(e) => setN(n.key, e.target.value)} className="w-full px-3 py-2.5 rounded-xl border text-sm font-mono" style={inputStyle} />
                   </div>
                 ))}
               </div>

@@ -1,0 +1,28 @@
+# Publish only the web application, never local credentials or mobile artifacts.
+mobile/**
+output/**
+tmp/**
+functions/**
+scripts/**
+tests/**
+Food tracking system for Indonesia/**
+node_modules/**
+dist/**
+.git/**
+.vercel/**
+.agents/**
+.codex/**
+.aws/**
+.plugins/**
+.env*
+**/.env*
+*.zip
+*.apk
+*.log
+*.md
+.mcp.json
+.mise.toml
+firebase.json
+firestore.rules
+firestore.indexes.json
+pnpm-lock.yaml

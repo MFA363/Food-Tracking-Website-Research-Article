@@ -9,6 +9,7 @@ export default function AdminLogs() {
   const [logs, setLogs] = useState<FoodLogEntry[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [userFilter, setUserFilter] = useState("");
@@ -17,6 +18,7 @@ export default function AdminLogs() {
   useEffect(() => {
     Promise.all([getAllLogs(), getAllUsers()])
       .then(([l, u]) => { setLogs(l); setUsers(u); })
+      .catch(() => setError("Logs could not be loaded. Check your connection and administrator permissions."))
       .finally(() => setLoading(false));
   }, []);
 
@@ -30,10 +32,11 @@ export default function AdminLogs() {
   }).sort((a, b) => b.loggedAt.localeCompare(a.loggedAt));
 
   const handleDelete = async (id: string) => {
-    await deleteFoodLog(id);
-    setLogs((prev) => prev.filter((l) => l.id !== id));
-    setConfirmDelete(null);
+    try { await deleteFoodLog(id); setLogs((prev) => prev.filter((l) => l.id !== id)); setConfirmDelete(null); }
+    catch { setError("The entry could not be deleted. Please retry."); }
   };
+
+  if (error) return <AdminLayout><p role="alert" className="error-text">{error}</p><button className="btn-secondary" onClick={() => window.location.reload()}>Reload</button></AdminLayout>;
 
   // Stats
   const todayStr = new Date().toISOString().split("T")[0];

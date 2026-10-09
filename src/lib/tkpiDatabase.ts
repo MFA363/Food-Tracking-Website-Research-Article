@@ -1,5 +1,6 @@
 import type { Food, Language, Nutrients } from "./types";
 import { usableImportedNutrients } from "./foodDataQuality";
+import { regionalFood } from './regionalFoods';
 
 type TkpiRecord = { kode: string; nama: string; kategori: string; per100g: Record<string, number | null> };
 let databasePromise: Promise<Food[]> | undefined;
@@ -17,6 +18,9 @@ function toFood(item: TkpiRecord): Food {
   const categories: Record<string, string> = { Serealia: "grains", Umbi: "grains", Kacang: "legumes", Sayuran: "vegetables", Buah: "fruits", Daging: "meat", Ikan: "fish", Telur: "eggs", Susu: "dairy", Minuman: "beverages", Lemak: "other", Gula: "other", Bumbu: "other" };
   return {
     id: `tkpi-${item.kode}`,
+    source: 'TKPI 2020',
+    region: item.kode === 'FP081' ? 'Pekalongan' : 'Indonesia',
+    aliases: item.kode === 'FP081' ? ['tauto', 'soto tauto', 'Pekalongan'] : [],
     name: { id: name, en: name, ms: name, jv: name, ar: name } as Record<Language, string>,
     category: categories[item.kategori.split(" ")[0]] || "other", nutrients, defaultUnit: "default", defaultWeight: 100,
   };
@@ -35,6 +39,12 @@ export function loadTkpiFoods(): Promise<Food[]> {
       // Collapse identical duplicate codes; exclude conflicting duplicates.
       return [...groups.values()].filter((rows) => rows.every((row) => row.nama === rows[0].nama && JSON.stringify(row.per100g) === JSON.stringify(rows[0].per100g))).map((rows) => toFood(rows[0]));
     })
+    .then(async (foods) => {
+      const response = await fetch('/data/regional_foods.json');
+      if (!response.ok) throw new Error('Regional food data could not be loaded.');
+      const regional: unknown[] = await response.json();
+      return [...foods, ...regional.map(regionalFood)];
+    })
     .catch((error) => { databasePromise = undefined; throw error; });
   return databasePromise;
 }
@@ -42,5 +52,5 @@ export function loadTkpiFoods(): Promise<Food[]> {
 export function searchTkpiFoods(foods: Food[], query: string): Food[] {
   const term = query.trim().toLocaleLowerCase("id-ID");
   if (!term) return foods.slice(0, 20);
-  return foods.filter((food) => food.name.id.toLocaleLowerCase("id-ID").includes(term)).slice(0, 20);
+  return foods.filter((food) => [food.name.id, ...(food.aliases || [])].join(' ').toLocaleLowerCase("id-ID").includes(term)).slice(0, 20);
 }

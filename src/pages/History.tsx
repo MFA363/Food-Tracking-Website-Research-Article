@@ -1,3 +1,4 @@
+import { localDate } from "@/lib/workspace";
 import React, { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -10,7 +11,7 @@ function getDateRange(days: number): string[] {
   for (let i = 0; i < days; i++) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    dates.push(d.toISOString().split("T")[0]);
+    dates.push(localDate(d));
   }
   return dates;
 }
@@ -20,18 +21,19 @@ export default function History() {
   const { t } = useLanguage();
   const [allLogs, setAllLogs] = useState<FoodLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [retry, setRetry] = useState(0);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [view, setView] = useState<"week" | "list">("week");
 
   useEffect(() => {
     if (!user) return;
-    setLoading(true);
-    getUserLogs(user.uid).then(setAllLogs).finally(() => setLoading(false));
-  }, [user]);
+    let active = true;
+    setLoading(true); setLoadError(""); setAllLogs([]);
+    getUserLogs(user.uid).then((data) => { if (active) setAllLogs(data); }).catch(() => { if (active) setLoadError("Records could not be loaded. Check your connection and retry."); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [user?.uid, retry]);
 
-  if (!user) return null;
-
-  const energy = calculateEnergyRequirement(user.weight, user.height, user.age, user.gender, user.activityLevel);
 
   // Group by date
   const byDate = useMemo(() => {
@@ -43,11 +45,15 @@ export default function History() {
     return map;
   }, [allLogs]);
 
+  if (!user) return null;
+  const energy = calculateEnergyRequirement(user.weight, user.height, user.age, user.gender, user.activityLevel);
   const sortedDates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
   const recentDates = getDateRange(14);
 
   const selectedLogs = selectedDate ? (byDate[selectedDate] || []) : [];
   const selectedTotals = sumNutrients(selectedLogs);
+
+  if (loadError) return <div role="alert" className="notice"><p>{loadError}</p><button className="btn-secondary" onClick={() => setRetry((value) => value + 1)}>Retry</button></div>;
 
   return (
     <div className="space-y-6">

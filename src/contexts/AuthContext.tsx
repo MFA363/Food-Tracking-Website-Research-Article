@@ -24,20 +24,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user?.uid]);
 
   useEffect(() => {
+    let generation = 0;
+    let active = true;
     const unsub = onAuthStateChange(async (uid) => {
+      const request = ++generation;
       if (uid) {
         try {
           const profile = await getUserProfile(uid);
-          setUser(profile);
+          if (active && request === generation) setUser(profile);
         } catch {
-          setUser(null);
+          if (active && request === generation) setUser(null);
         }
       } else {
         setUser(null);
       }
-      setLoading(false);
+      if (active && request === generation) setLoading(false);
     });
     return () => {
+      active = false;
+      generation++;
       if (typeof unsub === "function") unsub();
     };
   }, []);

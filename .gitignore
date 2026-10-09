@@ -9,6 +9,13 @@ vite.config.*.timestamp-*
 *-debug.log*
 logs/
 *.log
+mobile/config/*.json
+mobile/android/app/google-services.json
+mobile/ios/Runner/GoogleService-Info.plist
+mobile/android/key.properties
+*.jks
+*.keystore
+functions/.secret.local
 .claude-replay.*
 .tmp-*
 
@@ -18,3 +25,6 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
+
+.vercel
+.env*

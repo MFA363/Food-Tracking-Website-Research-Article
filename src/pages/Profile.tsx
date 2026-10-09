@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { updateUserProfile } from "@/lib/firebase";
 import { calculateBMI, calculateEnergyRequirement } from "@/lib/calculations";
 import BMIGauge from "@/components/BMIGauge";
+import HelpTip from "@/components/HelpTip";
 import type { Gender, ActivityLevel } from "@/lib/types";
 
 export default function Profile() {
@@ -41,8 +42,8 @@ export default function Profile() {
       setError(t("errorRequired")); return;
     }
     setSaving(true);
-    if (![form.height, form.weight, form.age].every((value) => Number.isFinite(Number(value))) || Number(form.height) < 50 || Number(form.height) > 250 || Number(form.weight) < 20 || Number(form.weight) > 300 || Number(form.age) < 19 || Number(form.age) > 120) {
-      setError("Enter valid adult profile values: age 19–120, height 50–250 cm, weight 20–300 kg.");
+    if (![form.height, form.weight, form.age].every((value) => Number.isFinite(Number(value))) || Number(form.height) < 50 || Number(form.height) > 250 || Number(form.weight) < 20 || Number(form.weight) > 300 || Number(form.age) < 19 || Number(form.age) > 78) {
+      setError("Enter valid values for this adult estimate: age 19–78, height 50–250 cm, weight 20–300 kg.");
       setSaving(false);
       return;
     }
@@ -74,19 +75,18 @@ export default function Profile() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
         <h1 className="font-display font-black text-2xl sm:text-3xl" style={{ color: "var(--foreground)" }}>{t("profileTitle")}</h1>
-        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Perbarui informasi dan data kesehatan Anda</p>
       </div>
 
       {/* Calculated summary */}
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="rounded-2xl border p-5 flex flex-col items-center" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted-foreground)" }}>{t("bmi")}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted-foreground)" }}>{t("bmi")} <HelpTip label="BMI">BMI is weight divided by height squared. Adult category cutoffs vary by population; see Sources & methods.</HelpTip></p>
           <BMIGauge bmi={bmi} />
         </div>
         <div className="rounded-2xl border p-5" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted-foreground)" }}>{t("dailyEnergyNeeds")}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--muted-foreground)" }}>TDEE <HelpTip label="TDEE estimate">Estimated daily energy expenditure = resting energy estimate × activity factor. It is a planning estimate, not a prescription.</HelpTip></p>
           <p className="font-display font-black text-4xl" style={{ color: "var(--primary)" }}>{energy.tdee.toLocaleString()}</p>
-          <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>kkal / hari (estimasi)</p>
+          <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>kcal / day</p>
           <div className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>REE (Mifflin–St Jeor)</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>{energy.bmr} kkal</span></div>
             <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Faktor Aktivitas</span><span className="font-mono font-semibold" style={{ color: "var(--foreground)" }}>×{energy.activityFactor}</span></div>
@@ -114,17 +114,17 @@ export default function Profile() {
         <h2 className="font-display font-bold text-lg" style={{ color: "var(--foreground)" }}>{t("healthInfo")}</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("heightCm")}</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("heightCm")} <HelpTip label="Height">Enter height in centimetres. Used in BMI and the adult energy estimate.</HelpTip></label>
             <input type="number" min="50" max="250" value={form.height} onChange={(e) => set("height", e.target.value)} className={inputClass} style={inputStyle} />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("weightKg")}</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("weightKg")} <HelpTip label="Weight">Enter weight in kilograms. Used in BMI and the adult energy estimate.</HelpTip></label>
             <input type="number" min="20" max="300" value={form.weight} onChange={(e) => set("weight", e.target.value)} className={inputClass} style={inputStyle} />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("age")}</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("age")} <HelpTip label="Age">This estimate currently supports adults aged 19–78.</HelpTip></label>
             <input type="number" min="1" max="120" value={form.age} onChange={(e) => set("age", e.target.value)} className={inputClass} style={inputStyle} />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function Profile() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("activityLevel")}</label>
+          <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("activityLevel")} <HelpTip label="Activity factor">A multiplier applied to resting energy. It is a broad estimate; individual needs vary.</HelpTip></label>
           <select value={form.activityLevel} onChange={(e) => set("activityLevel", e.target.value)} className={inputClass} style={inputStyle}>
             <option value="sedentary">{t("sedentary")}</option>
             <option value="light">{t("light")}</option>
@@ -155,16 +155,6 @@ export default function Profile() {
             <option value="active">{t("active")}</option>
             <option value="very_active">{t("very_active")}</option>
           </select>
-        </div>
-      </div>
-
-      {/* User info */}
-      <div className="rounded-2xl border p-5" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-        <h2 className="font-display font-bold text-lg mb-4" style={{ color: "var(--foreground)" }}>Informasi Akun</h2>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>UID</span><span className="font-mono text-xs" style={{ color: "var(--foreground)" }}>{user.uid.slice(0, 16)}...</span></div>
-          <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Role</span><span className="font-medium capitalize px-2 py-0.5 rounded" style={{ background: user.role === "admin" ? "var(--accent)" + "20" : "var(--secondary)", color: user.role === "admin" ? "var(--accent)" : "var(--primary)" }}>{user.role}</span></div>
-          <div className="flex justify-between"><span style={{ color: "var(--muted-foreground)" }}>Bergabung</span><span style={{ color: "var(--foreground)" }}>{new Date(user.createdAt).toLocaleDateString("id-ID")}</span></div>
         </div>
       </div>
 

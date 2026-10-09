@@ -13,13 +13,15 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(() => {
-    const stored = localStorage.getItem("nutrisiji_lang") as Language | null;
-    return stored || "id";
+    try {
+      const stored = localStorage.getItem("nutrisiji_lang");
+      return LANGUAGES.some((language) => language.code === stored) ? stored as Language : "id";
+    } catch { return "id"; }
   });
 
   const setLang = (newLang: Language) => {
     setLangState(newLang);
-    localStorage.setItem("nutrisiji_lang", newLang);
+    try { localStorage.setItem("nutrisiji_lang", newLang); } catch { /* Language still works for this page session. */ }
   };
 
   const isRTL = LANGUAGES.find((l) => l.code === lang)?.rtl ?? false;

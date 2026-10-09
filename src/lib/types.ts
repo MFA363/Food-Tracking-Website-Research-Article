@@ -26,14 +26,14 @@ export interface Nutrients {
   protein: number;   // g
   fat: number;       // g
   carbohydrate: number; // g
-  fiber: number;     // g
-  calcium: number;   // mg
-  phosphorus: number; // mg
-  iron: number;      // mg
-  sodium: number;    // mg
-  potassium: number; // mg
-  copper: number;    // mg
-  zinc: number;      // mg
+  fiber: number | null;     // g; null means not reported, never zero
+  calcium: number | null;   // mg
+  phosphorus: number | null; // mg
+  iron: number | null;      // mg
+  sodium: number | null;    // mg
+  potassium: number | null; // mg
+  copper: number | null;    // mg
+  zinc: number | null;      // mg
 }
 
 export interface Food {
@@ -44,6 +44,10 @@ export interface Food {
   defaultUnit: string;
   defaultWeight: number; // grams per default unit
   isCustom?: boolean;
+  region?: string;
+  aliases?: string[];
+  source?: string;
+  sourceUrl?: string;
   createdBy?: string;
 }
 

@@ -1,0 +1,926 @@
+[
+  {
+    "id": "myfcd-221019",
+    "name": "Nasi lemak",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "nasi lemak"
+    ],
+    "nutrients": {
+      "energy": 169,
+      "protein": 4.2,
+      "fat": 5.7,
+      "carbohydrate": 25.3,
+      "fiber": 0.3,
+      "calcium": 24,
+      "phosphorus": 51,
+      "iron": 1.8,
+      "sodium": 338,
+      "potassium": 121,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/221019/0/10/-1/0/0/",
+    "sourceCode": "221019",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-221018",
+    "name": "Nasi ayam (chicken rice)",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "nasi ayam",
+      "chicken rice"
+    ],
+    "nutrients": {
+      "energy": 121,
+      "protein": 7,
+      "fat": 1.4,
+      "carbohydrate": 20,
+      "fiber": 0.1,
+      "calcium": 10,
+      "phosphorus": 59,
+      "iron": 0.3,
+      "sodium": 305,
+      "potassium": 60,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/221018/0/10/-1/0/0/",
+    "sourceCode": "221018",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-221023",
+    "name": "Roti canai",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "roti canai"
+    ],
+    "nutrients": {
+      "energy": 317,
+      "protein": 7,
+      "fat": 10.8,
+      "carbohydrate": 47.9,
+      "fiber": 0,
+      "calcium": 13,
+      "phosphorus": 129,
+      "iron": 1.5,
+      "sodium": 536,
+      "potassium": 152,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/221023/0/10/-1/0/0/",
+    "sourceCode": "221023",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-221025",
+    "name": "Kuah dhal",
+    "category": "legumes",
+    "region": "Malaysia",
+    "aliases": [
+      "kuah dhal"
+    ],
+    "nutrients": {
+      "energy": 73,
+      "protein": 3.1,
+      "fat": 2.7,
+      "carbohydrate": 9,
+      "fiber": 0.4,
+      "calcium": 18,
+      "phosphorus": 124,
+      "iron": 1.2,
+      "sodium": 670,
+      "potassium": 25,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/221025/0/10/-1/0/0/",
+    "sourceCode": "221025",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-222014",
+    "name": "Ayam kurma",
+    "category": "meat",
+    "region": "Malaysia",
+    "aliases": [
+      "ayam kurma"
+    ],
+    "nutrients": {
+      "energy": 175,
+      "protein": 12.4,
+      "fat": 13.4,
+      "carbohydrate": 1.2,
+      "fiber": 1.2,
+      "calcium": 32,
+      "phosphorus": 196,
+      "iron": 2.7,
+      "sodium": 98,
+      "potassium": 97,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/222014/0/10/-1/0/0/",
+    "sourceCode": "222014",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-222005",
+    "name": "Rendang daging (beef)",
+    "category": "meat",
+    "region": "Malaysia",
+    "aliases": [
+      "rendang daging",
+      "beef"
+    ],
+    "nutrients": {
+      "energy": 253,
+      "protein": 18.2,
+      "fat": 16.5,
+      "carbohydrate": 7.8,
+      "fiber": 0.4,
+      "calcium": 21,
+      "phosphorus": 110,
+      "iron": 2.3,
+      "sodium": 318,
+      "potassium": 253,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/222005/0/10/-1/0/0/",
+    "sourceCode": "222005",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-222016",
+    "name": "Satay ayam (chicken)",
+    "category": "meat",
+    "region": "Malaysia",
+    "aliases": [
+      "satay ayam",
+      "chicken"
+    ],
+    "nutrients": {
+      "energy": 243,
+      "protein": 18.9,
+      "fat": 12.9,
+      "carbohydrate": 12.7,
+      "fiber": 1.9,
+      "calcium": 29,
+      "phosphorus": 335,
+      "iron": 2.9,
+      "sodium": 135,
+      "potassium": 221,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/222016/0/10/-1/0/0/",
+    "sourceCode": "222016",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-223003",
+    "name": "Sambal ikan bilis",
+    "category": "fish",
+    "region": "Malaysia",
+    "aliases": [
+      "sambal ikan bilis"
+    ],
+    "nutrients": {
+      "energy": 316,
+      "protein": 28.2,
+      "fat": 20.9,
+      "carbohydrate": 3.8,
+      "fiber": 0.1,
+      "calcium": 43,
+      "phosphorus": 469,
+      "iron": 1.1,
+      "sodium": 428,
+      "potassium": 328,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/223003/0/10/-1/0/0/",
+    "sourceCode": "223003",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-103024",
+    "name": "Tau fu fah (unsweetened)",
+    "category": "legumes",
+    "region": "Malaysia",
+    "aliases": [
+      "tau fu fah",
+      "unsweetened"
+    ],
+    "nutrients": {
+      "energy": 26,
+      "protein": 1.9,
+      "fat": 0.4,
+      "carbohydrate": 3.6,
+      "fiber": 0,
+      "calcium": 66,
+      "phosphorus": 27,
+      "iron": 0.4,
+      "sodium": 2,
+      "potassium": 79,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/103024/0/10/-1/0/0/",
+    "sourceCode": "103024",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-103026",
+    "name": "Susu soya / susu kedelai (unsweetened)",
+    "category": "beverages",
+    "region": "Both",
+    "aliases": [
+      "susu soya",
+      "susu kedelai",
+      "unsweetened"
+    ],
+    "nutrients": {
+      "energy": 59,
+      "protein": 3.7,
+      "fat": 1.2,
+      "carbohydrate": 8.4,
+      "fiber": 0,
+      "calcium": 20,
+      "phosphorus": 50,
+      "iron": 0.3,
+      "sodium": 2,
+      "potassium": 63,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/103026/0/10/-1/0/0/",
+    "sourceCode": "103026",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-103025",
+    "name": "Susu soya (packet)",
+    "category": "beverages",
+    "region": "Malaysia",
+    "aliases": [
+      "susu soya",
+      "packet"
+    ],
+    "nutrients": {
+      "energy": 63,
+      "protein": 1.3,
+      "fat": 2.2,
+      "carbohydrate": 9.6,
+      "fiber": 0,
+      "calcium": 7,
+      "phosphorus": 16,
+      "iron": 0.2,
+      "sodium": 2,
+      "potassium": 42,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/103025/0/10/-1/0/0/",
+    "sourceCode": "103025",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-104013",
+    "name": "Air kelapa (coconut water)",
+    "category": "beverages",
+    "region": "Both",
+    "aliases": [
+      "air kelapa",
+      "coconut water"
+    ],
+    "nutrients": {
+      "energy": 22,
+      "protein": 0,
+      "fat": 0,
+      "carbohydrate": 5.6,
+      "fiber": 0,
+      "calcium": 14,
+      "phosphorus": 12,
+      "iron": 0.1,
+      "sodium": 1,
+      "potassium": 198,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/104013/0/10/-1/0/0/",
+    "sourceCode": "104013",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-106030",
+    "name": "Jambu batu / jambu biji (guava)",
+    "category": "fruits",
+    "region": "Both",
+    "aliases": [
+      "jambu batu",
+      "jambu biji",
+      "guava"
+    ],
+    "nutrients": {
+      "energy": 46,
+      "protein": 1.1,
+      "fat": 0.2,
+      "carbohydrate": 10,
+      "fiber": 6.8,
+      "calcium": 33,
+      "phosphorus": 15,
+      "iron": 1.2,
+      "sodium": 23,
+      "potassium": 29,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/106030/0/10/-1/0/0/",
+    "sourceCode": "106030",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-106066",
+    "name": "Betik / pepaya (papaya)",
+    "category": "fruits",
+    "region": "Both",
+    "aliases": [
+      "betik",
+      "pepaya",
+      "papaya"
+    ],
+    "nutrients": {
+      "energy": 35,
+      "protein": 1.5,
+      "fat": 0.1,
+      "carbohydrate": 7.1,
+      "fiber": 0.5,
+      "calcium": 11,
+      "phosphorus": 7,
+      "iron": 0.7,
+      "sodium": 3,
+      "potassium": 39,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/106066/0/10/-1/0/0/",
+    "sourceCode": "106066",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-106010",
+    "name": "Pisang mas",
+    "category": "fruits",
+    "region": "Both",
+    "aliases": [
+      "pisang mas"
+    ],
+    "nutrients": {
+      "energy": 99,
+      "protein": 1.4,
+      "fat": 0.3,
+      "carbohydrate": 22.9,
+      "fiber": 1.7,
+      "calcium": 0,
+      "phosphorus": 3,
+      "iron": 0.2,
+      "sodium": 10,
+      "potassium": 342,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD 1997",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcd97/index.php/site/detail_product/106010/0/10/-1/0/0/",
+    "sourceCode": "106010",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R111062",
+    "name": "Sirap bandung",
+    "category": "beverages",
+    "region": "Malaysia",
+    "aliases": [
+      "sirap bandung"
+    ],
+    "nutrients": {
+      "energy": 77,
+      "protein": 4.67,
+      "fat": 2.66,
+      "carbohydrate": 8.68,
+      "fiber": 0.9,
+      "calcium": null,
+      "phosphorus": null,
+      "iron": null,
+      "sodium": null,
+      "potassium": null,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R111062/0/10/-1/0/0/",
+    "sourceCode": "R111062",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R113058",
+    "name": "Soya drink (sweetened, packaged)",
+    "category": "beverages",
+    "region": "Malaysia",
+    "aliases": [
+      "soya drink",
+      "sweetened, packaged"
+    ],
+    "nutrients": {
+      "energy": 55,
+      "protein": 1.58,
+      "fat": 1.31,
+      "carbohydrate": 9.23,
+      "fiber": 0,
+      "calcium": null,
+      "phosphorus": null,
+      "iron": null,
+      "sodium": null,
+      "potassium": null,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R113058/0/10/-1/0/0/",
+    "sourceCode": "R113058",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R113060",
+    "name": "Ice lemon tea (sweetened, packaged)",
+    "category": "beverages",
+    "region": "Malaysia",
+    "aliases": [
+      "ice lemon tea",
+      "sweetened, packaged"
+    ],
+    "nutrients": {
+      "energy": 35,
+      "protein": 0,
+      "fat": 0,
+      "carbohydrate": 8.71,
+      "fiber": 0,
+      "calcium": null,
+      "phosphorus": null,
+      "iron": null,
+      "sodium": null,
+      "potassium": null,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R113060/0/10/-1/0/0/",
+    "sourceCode": "R113060",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R113064",
+    "name": "Orange juice (fresh)",
+    "category": "beverages",
+    "region": "Both",
+    "aliases": [
+      "orange juice",
+      "fresh"
+    ],
+    "nutrients": {
+      "energy": 51,
+      "protein": 0.13,
+      "fat": 0.09,
+      "carbohydrate": 12.42,
+      "fiber": 0.7,
+      "calcium": null,
+      "phosphorus": null,
+      "iron": null,
+      "sodium": null,
+      "potassium": null,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R113064/0/10/-1/0/0/",
+    "sourceCode": "R113064",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R211030",
+    "name": "Putu bambu",
+    "category": "other",
+    "region": "Both",
+    "aliases": [
+      "putu bambu"
+    ],
+    "nutrients": {
+      "energy": 247,
+      "protein": 3.58,
+      "fat": 2.22,
+      "carbohydrate": 53.22,
+      "fiber": 3.8,
+      "calcium": null,
+      "phosphorus": null,
+      "iron": null,
+      "sodium": null,
+      "potassium": null,
+      "copper": null,
+      "zinc": null
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R211030/0/10/-1/0/0/",
+    "sourceCode": "R211030",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R212078",
+    "name": "Roti jala",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "roti jala"
+    ],
+    "nutrients": {
+      "energy": 184.12,
+      "protein": 5.2,
+      "fat": 3.37,
+      "carbohydrate": 33.25,
+      "fiber": 3.5,
+      "calcium": 3,
+      "phosphorus": 58,
+      "iron": 0.89,
+      "sodium": 241,
+      "potassium": 69,
+      "copper": 0,
+      "zinc": 0.47
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R212078/0/10/-1/0/0/",
+    "sourceCode": "R212078",
+    "accessed": "2026-10-07",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R106035",
+    "name": "Buah naga merah (red dragon fruit)",
+    "category": "fruits",
+    "region": "Malaysia",
+    "aliases": [
+      "buah naga merah",
+      "red dragon fruit"
+    ],
+    "nutrients": {
+      "energy": 51,
+      "protein": 1.37,
+      "fat": 0.07,
+      "carbohydrate": 10.9,
+      "fiber": 0.9,
+      "calcium": 9,
+      "phosphorus": 24,
+      "iron": 0.13,
+      "sodium": 16,
+      "potassium": 167,
+      "copper": 0,
+      "zinc": 0.47
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R106035/0/10/-1/0/0/",
+    "sourceCode": "R106035",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R106036",
+    "name": "Buah naga putih (white dragon fruit)",
+    "category": "fruits",
+    "region": "Malaysia",
+    "aliases": [
+      "buah naga putih",
+      "white dragon fruit"
+    ],
+    "nutrients": {
+      "energy": 53,
+      "protein": 1.6,
+      "fat": 0.15,
+      "carbohydrate": 10.55,
+      "fiber": 1.1,
+      "calcium": 8,
+      "phosphorus": 25,
+      "iron": 0.2,
+      "sodium": 17,
+      "potassium": 182,
+      "copper": 0,
+      "zinc": 0.45
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R106036/0/10/-1/0/0/",
+    "sourceCode": "R106036",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R105006",
+    "name": "Jagung sayur (baby corn)",
+    "category": "vegetables",
+    "region": "Malaysia",
+    "aliases": [
+      "jagung sayur",
+      "baby corn"
+    ],
+    "nutrients": {
+      "energy": 37,
+      "protein": 2.17,
+      "fat": 0.1,
+      "carbohydrate": 6.12,
+      "fiber": 1.4,
+      "calcium": 15,
+      "phosphorus": 40,
+      "iron": 0.3,
+      "sodium": 4,
+      "potassium": 133,
+      "copper": 0,
+      "zinc": 0.48
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R105006/0/10/-1/0/0/",
+    "sourceCode": "R105006",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R101096",
+    "name": "Ban kelapa (coconut bun)",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "ban kelapa",
+      "coconut bun"
+    ],
+    "nutrients": {
+      "energy": 295,
+      "protein": 7.22,
+      "fat": 6.88,
+      "carbohydrate": 51.05,
+      "fiber": 4.4,
+      "calcium": 65,
+      "phosphorus": 65,
+      "iron": 1,
+      "sodium": 198,
+      "potassium": 106,
+      "copper": 0,
+      "zinc": 0.83
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R101096/0/10/-1/0/0/",
+    "sourceCode": "R101096",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R101099",
+    "name": "Ban kaya (kaya bun)",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "ban kaya",
+      "kaya bun"
+    ],
+    "nutrients": {
+      "energy": 274,
+      "protein": 7.13,
+      "fat": 2.9,
+      "carbohydrate": 54.73,
+      "fiber": 3.9,
+      "calcium": 62,
+      "phosphorus": 59,
+      "iron": 0.67,
+      "sodium": 170,
+      "potassium": 80,
+      "copper": 0,
+      "zinc": 0.73
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R101099/0/10/-1/0/0/",
+    "sourceCode": "R101099",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R101102",
+    "name": "Ban kacang merah (red bean bun)",
+    "category": "grains",
+    "region": "Malaysia",
+    "aliases": [
+      "ban kacang merah",
+      "red bean bun"
+    ],
+    "nutrients": {
+      "energy": 294,
+      "protein": 7.93,
+      "fat": 5.83,
+      "carbohydrate": 52.4,
+      "fiber": 4.7,
+      "calcium": 80,
+      "phosphorus": 71,
+      "iron": 1.07,
+      "sodium": 169,
+      "potassium": 130,
+      "copper": 0,
+      "zinc": 0.93
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R101102/0/10/-1/0/0/",
+    "sourceCode": "R101102",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R105022",
+    "name": "Lada bengala hijau (green capsicum)",
+    "category": "vegetables",
+    "region": "Malaysia",
+    "aliases": [
+      "lada bengala hijau",
+      "green capsicum"
+    ],
+    "nutrients": {
+      "energy": 20,
+      "protein": 0.68,
+      "fat": 0.15,
+      "carbohydrate": 3.4,
+      "fiber": 1.3,
+      "calcium": 10,
+      "phosphorus": 16,
+      "iron": 0.43,
+      "sodium": 14,
+      "potassium": 100,
+      "copper": 0,
+      "zinc": 0.17
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R105022/0/10/-1/0/0/",
+    "sourceCode": "R105022",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R105023",
+    "name": "Lada bengala merah (red capsicum)",
+    "category": "vegetables",
+    "region": "Malaysia",
+    "aliases": [
+      "lada bengala merah",
+      "red capsicum"
+    ],
+    "nutrients": {
+      "energy": 29,
+      "protein": 0.87,
+      "fat": 0.18,
+      "carbohydrate": 4.93,
+      "fiber": 2,
+      "calcium": 9,
+      "phosphorus": 21,
+      "iron": 0.75,
+      "sodium": 18,
+      "potassium": 134,
+      "copper": 0,
+      "zinc": 0.5
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R105023/0/10/-1/0/0/",
+    "sourceCode": "R105023",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R105024",
+    "name": "Lada bengala kuning (yellow capsicum)",
+    "category": "vegetables",
+    "region": "Malaysia",
+    "aliases": [
+      "lada bengala kuning",
+      "yellow capsicum"
+    ],
+    "nutrients": {
+      "energy": 29,
+      "protein": 0.85,
+      "fat": 0.03,
+      "carbohydrate": 5.37,
+      "fiber": 1.8,
+      "calcium": 7,
+      "phosphorus": 16,
+      "iron": 0.53,
+      "sodium": 13,
+      "potassium": 132,
+      "copper": 0,
+      "zinc": 0.18
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R105024/0/10/-1/0/0/",
+    "sourceCode": "R105024",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  },
+  {
+    "id": "myfcd-R106051",
+    "name": "Tembikai susu (honeydew)",
+    "category": "fruits",
+    "region": "Malaysia",
+    "aliases": [
+      "tembikai susu",
+      "honeydew"
+    ],
+    "nutrients": {
+      "energy": 24,
+      "protein": 0.35,
+      "fat": 0.35,
+      "carbohydrate": 4.33,
+      "fiber": 0.9,
+      "calcium": 10,
+      "phosphorus": 13,
+      "iron": 0.18,
+      "sodium": 24,
+      "potassium": 93,
+      "copper": 0,
+      "zinc": 0.23
+    },
+    "source": "MOH Malaysia · MyFCD current",
+    "sourceUrl": "https://myfcd.moh.gov.my/myfcdcurrent/index.php/site/detail_product/R106051/0/10/-1/0/0/",
+    "sourceCode": "R106051",
+    "accessed": "2026-10-09",
+    "basis": "100 g edible portion; source preparation",
+    "note": "Malaysian reference composition. Local recipes and brands vary. Unreported nutrients are not zero."
+  }
+]

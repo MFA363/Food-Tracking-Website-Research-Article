@@ -6,6 +6,7 @@ import { calculateFoodNutrients } from "@/lib/calculations";
 import { addFoodLog, getCustomFoods } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Food, MealType, FoodLogEntry } from "@/lib/types";
+import HelpTip from "./HelpTip";
 
 interface FoodSearchModalProps {
   open: boolean;
@@ -22,6 +23,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
 
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
+  const [region, setRegion] = useState('All');
   const [results, setResults] = useState<Food[]>([]);
   const [selected, setSelected] = useState<Food | null>(null);
   const [mealType, setMealType] = useState<MealType>(defaultMeal);
@@ -31,6 +33,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   const [customWeight, setCustomWeight] = useState(100);
   const [useCustomWeight, setUseCustomWeight] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
   const [tkpiFoods, setTkpiFoods] = useState<Food[]>([]);
   const [dataError, setDataError] = useState("");
@@ -38,8 +41,11 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
 
   useEffect(() => {
     if (open) {
+      setSaveError("");
+      setDataError("");
       setQuery("");
       setCategory("all");
+      setRegion('All');
       setSelected(null);
       setQuantity(1);
       setUnitLabel("gram (g)");
@@ -69,11 +75,11 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   useEffect(() => {
     const localFoods = [...customFoods.filter(f =>
       (!query || f.name[lang]?.toLowerCase().includes(query.toLowerCase()) || f.name.en.toLowerCase().includes(query.toLowerCase())) &&
-      (category === "all" || f.category === category)
+      (category === "all" || f.category === category) && region === 'All'
     )];
-    const officialFoods = searchTkpiFoods(tkpiFoods.filter((food) => category === "all" || food.category === category), query);
+    const officialFoods = searchTkpiFoods(tkpiFoods.filter((food) => (category === "all" || food.category === category) && (region === 'All' || food.region === region || food.region === 'Both')), query);
     setResults([...localFoods, ...officialFoods].slice(0, 20));
-  }, [query, category, lang, customFoods, tkpiFoods]);
+  }, [query, category, region, lang, customFoods, tkpiFoods]);
 
   useEffect(() => {
     if (selected) {
@@ -97,7 +103,9 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
   const calculatedNutrients = selected ? calculateFoodNutrients(selected.nutrients, totalGrams) : null;
 
   const handleAdd = async () => {
-    if (!selected || !user) return;
+    if (!selected || !user || saving) return;
+    setSaveError("");
+    if (!Number.isFinite(totalGrams) || totalGrams <= 0) { setSaveError("Enter a food weight greater than zero."); return; }
     setSaving(true);
     try {
       const entry: Omit<FoodLogEntry, "id"> = {
@@ -117,7 +125,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
       onAdd(saved);
       onClose();
     } catch (err) {
-      console.error(err);
+      setSaveError(err instanceof Error ? err.message : "Food could not be saved. Please retry.");
     } finally {
       setSaving(false);
     }
@@ -142,10 +150,11 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
           </button>
         </div>
 
+        {saveError && <p role="alert" className="error-text p-4">{saveError}</p>}
         <div className="overflow-y-auto flex-1">
           {!selected ? (
             <div className="p-4 space-y-3">
-              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Food values are not independently verified. Invalid or incomplete imported rows are excluded. Weigh the edible portion. <a href="/references" className="underline">Data quality & sources</a></p>
+              <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>Choose a food and enter edible weight. <HelpTip label="Food data">Catalogue values may be incomplete or unverified. Weigh the edible portion; review data quality and sources.</HelpTip> <a href="/references" className="underline">Sources</a></p>
               {/* Meal type selector */}
               <div className="grid grid-cols-4 gap-1 p-1 rounded-xl" style={{ background: "var(--muted)" }}>
                 {(["breakfast", "lunch", "dinner", "snack"] as MealType[]).map((m) => (
@@ -175,6 +184,9 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
               </div>
 
               {/* Category filter */}
+              <div className="flex gap-2 flex-wrap" aria-label="Food region">
+                {['All', 'Pekalongan', 'Malaysia'].map(label => <button key={label} type="button" aria-pressed={region === label} onClick={() => setRegion(label)} className={region === label ? 'btn-primary' : 'btn-secondary'}>{label}</button>)}
+              </div>
               <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
                 {FOOD_CATEGORIES.map((cat) => (
                   <button
@@ -226,6 +238,8 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
               {/* Food info */}
               <div className="p-4 rounded-xl" style={{ background: "var(--muted)" }}>
                 <h4 className="font-display font-bold" style={{ color: "var(--foreground)" }}>{selected.name[lang] || selected.name.id}</h4>
+                <p className="text-xs mt-2">{selected.source || 'Custom food'} <HelpTip label="Food reference">Recipes and brands vary. Unreported nutrients are not zero; affected daily totals are marked incomplete.</HelpTip></p>
+                {selected.sourceUrl && <a className="text-xs underline" href={selected.sourceUrl} target="_blank" rel="noopener noreferrer">View source record</a>}
                 <div className="grid grid-cols-4 gap-2 mt-3">
                   {[
                     { label: "Energi", value: `${selected.nutrients.energy}`, unit: "kkal" },
@@ -332,7 +346,7 @@ export default function FoodSearchModal({ open, onClose, onAdd, defaultMeal = "b
           <div className="px-5 py-4 border-t" style={{ borderColor: "var(--border)" }}>
             <button
               onClick={handleAdd}
-              disabled={saving || totalGrams <= 0}
+              disabled={saving || !Number.isFinite(totalGrams) || totalGrams <= 0}
               className="w-full py-3 rounded-xl font-display font-bold text-sm transition-all disabled:opacity-50"
               style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
             >

@@ -34,7 +34,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex" style={{ background: "var(--background)" }}>
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12" style={{ background: "var(--primary)" }}>
+      <div className="hidden">
         <Link to="/" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-lg bg-white/20">C</div>
           <span className="font-display font-bold text-2xl text-white">CalNut</span>
@@ -59,7 +59,7 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center px-4 sm:px-8 py-12">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <Link to="/" className="flex items-center gap-2 mb-8 lg:hidden">
+          <Link to="/" className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>C</div>
             <span className="font-display font-bold text-xl" style={{ color: "var(--foreground)" }}>CalNut</span>
           </Link>
@@ -73,7 +73,6 @@ export default function Login() {
             </div>
           )}
 
-          <p className="mb-4 text-xs" style={{ color: "var(--muted-foreground)" }}>Example administrator email: admin@access.id</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: "var(--foreground)" }}>{t("email")}</label>

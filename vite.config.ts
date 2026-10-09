@@ -6,6 +6,9 @@ import path from "node:path";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { alias: { "@": path.resolve(import.meta.dirname, "./src") } },
-  server: { host: "0.0.0.0", port: 8443, strictPort: true },
+  server: {
+    host: "0.0.0.0", port: 8443, strictPort: true,
+    watch: { ignored: ["**/mobile/build/**", "**/mobile/.dart_tool/**", "**/mobile/android/.gradle/**", "**/output/**"] },
+  },
   preview: { host: "0.0.0.0", port: 8443 },
 });

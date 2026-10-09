@@ -10,6 +10,7 @@ import {
   signOut,
   onAuthStateChanged,
   type User,
+  deleteUser as deleteAuthUser,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -17,13 +18,12 @@ import {
   setDoc,
   getDoc,
   getDocs,
+  onSnapshot,
   collection,
   query,
   where,
   deleteDoc,
   updateDoc,
-  addDoc,
-  orderBy,
   type Firestore,
 } from "firebase/firestore";
 import type { UserProfile, FoodLogEntry, Food } from "./types";
@@ -37,78 +37,28 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const FIREBASE_CONFIGURED = !!import.meta.env.VITE_FIREBASE_PROJECT_ID;
+const hasFirebaseConfig = [firebaseConfig.apiKey, firebaseConfig.authDomain, firebaseConfig.projectId, firebaseConfig.appId].every((value) => typeof value === "string" && value.trim().length > 0);
+let FIREBASE_CONFIGURED = false;
 
 let app: FirebaseApp | null = null;
 let auth: ReturnType<typeof getAuth> | null = null;
 let db: Firestore | null = null;
 
-if (FIREBASE_CONFIGURED) {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
+if (hasFirebaseConfig) {
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    FIREBASE_CONFIGURED = true;
+  } catch { /* Keep public calculators accessible if configuration is invalid. */ }
+}
+
+function unavailable(): never {
+  throw new Error("Cloud connection is not configured. Please contact the administrator. No data was saved locally.");
 }
 
 export { auth, db, FIREBASE_CONFIGURED };
-console.log("Firebase App Connected:", app?.name);
-
-// ── Demo Mode (localStorage) ────────────────────────────────────────
-
-type DemoUser = { uid: string; email: string; password: string };
-
-function getDemoUsers(): DemoUser[] {
-  try {
-    return JSON.parse(localStorage.getItem("demo_users") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveDemoUsers(users: DemoUser[]) {
-  localStorage.setItem("demo_users", JSON.stringify(users));
-}
-
-function getDemoProfiles(): Record<string, UserProfile> {
-  try {
-    return JSON.parse(localStorage.getItem("demo_profiles") || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function saveDemoProfiles(profiles: Record<string, UserProfile>) {
-  localStorage.setItem("demo_profiles", JSON.stringify(profiles));
-}
-
-function getDemoLogs(): FoodLogEntry[] {
-  try {
-    return JSON.parse(localStorage.getItem("demo_logs") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveDemoLogs(logs: FoodLogEntry[]) {
-  localStorage.setItem("demo_logs", JSON.stringify(logs));
-}
-
-function getDemoFoods(): Food[] {
-  try {
-    return JSON.parse(localStorage.getItem("demo_custom_foods") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveDemoFoods(foods: Food[]) {
-  localStorage.setItem("demo_custom_foods", JSON.stringify(foods));
-}
-
-function generateId(): string {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
-}
-
-// ── Unified API ─────────────────────────────────────────────────────
+function generateId(): string { return crypto.randomUUID(); }
 
 export async function registerUser(
   email: string,
@@ -120,48 +70,36 @@ export async function registerUser(
     const now = new Date().toISOString();
     const fullProfile: UserProfile = {
       ...profile,
+      role: "user",
       uid: cred.user.uid,
       email,
       createdAt: now,
       updatedAt: now,
     };
-    await setDoc(doc(db, "users", cred.user.uid), fullProfile);
+    try {
+      await setDoc(doc(db, "users", cred.user.uid), fullProfile);
+    } catch (error) {
+      try { await deleteAuthUser(cred.user); } catch { await signOut(auth); }
+      throw error;
+    }
     return fullProfile;
   }
 
-  // Demo mode
-  const users = getDemoUsers();
-  if (users.find((u) => u.email === email)) {
-    throw new Error("Email sudah terdaftar. Silakan gunakan email lain.");
-  }
-  const uid = generateId();
-  users.push({ uid, email, password });
-  saveDemoUsers(users);
-  const now = new Date().toISOString();
-  const fullProfile: UserProfile = { ...profile, uid, email, createdAt: now, updatedAt: now };
-  const profiles = getDemoProfiles();
-  profiles[uid] = fullProfile;
-  saveDemoProfiles(profiles);
-  localStorage.setItem("demo_current_uid", uid);
-  return fullProfile;
+  return unavailable();
 }
 
 export async function loginUser(email: string, password: string): Promise<UserProfile> {
   if (FIREBASE_CONFIGURED && auth && db) {
     const cred = await signInWithEmailAndPassword(auth, email, password);
     const snap = await getDoc(doc(db, "users", cred.user.uid));
-    if (!snap.exists()) throw new Error("Profil pengguna tidak ditemukan.");
+    if (!snap.exists()) {
+      await signOut(auth);
+      throw new Error("Account profile is unavailable. Contact the administrator before registering again.");
+    }
     return snap.data() as UserProfile;
   }
 
-  const users = getDemoUsers();
-  const user = users.find((u) => u.email === email && u.password === password);
-  if (!user) throw new Error("Email atau password salah.");
-  localStorage.setItem("demo_current_uid", user.uid);
-  const profiles = getDemoProfiles();
-  const profile = profiles[user.uid];
-  if (!profile) throw new Error("Profil tidak ditemukan.");
-  return profile;
+  return unavailable();
 }
 
 export async function logoutUser(): Promise<void> {
@@ -169,33 +107,26 @@ export async function logoutUser(): Promise<void> {
     await signOut(auth);
     return;
   }
-  localStorage.removeItem("demo_current_uid");
+  return unavailable();
 }
 
-export function getCurrentDemoUid(): string | null {
-  return localStorage.getItem("demo_current_uid");
-}
 
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   if (FIREBASE_CONFIGURED && db) {
     const snap = await getDoc(doc(db, "users", uid));
     return snap.exists() ? (snap.data() as UserProfile) : null;
   }
-  const profiles = getDemoProfiles();
-  return profiles[uid] || null;
+  return unavailable();
 }
 
 export async function updateUserProfile(uid: string, data: Partial<UserProfile>): Promise<void> {
-  const updatedData = { ...data, updatedAt: new Date().toISOString() };
+  const { uid: ignoredUid, email: ignoredEmail, createdAt: ignoredCreatedAt, ...editable } = data;
+  const updatedData = { ...editable, updatedAt: new Date().toISOString() };
   if (FIREBASE_CONFIGURED && db) {
     await updateDoc(doc(db, "users", uid), updatedData);
     return;
   }
-  const profiles = getDemoProfiles();
-  if (profiles[uid]) {
-    profiles[uid] = { ...profiles[uid], ...updatedData };
-    saveDemoProfiles(profiles);
-  }
+  return unavailable();
 }
 
 export async function getAllUsers(): Promise<UserProfile[]> {
@@ -203,8 +134,7 @@ export async function getAllUsers(): Promise<UserProfile[]> {
     const snap = await getDocs(collection(db, "users"));
     return snap.docs.map((d) => d.data() as UserProfile);
   }
-  const profiles = getDemoProfiles();
-  return Object.values(profiles);
+  return unavailable();
 }
 
 export async function deleteUser(uid: string): Promise<void> {
@@ -212,26 +142,27 @@ export async function deleteUser(uid: string): Promise<void> {
     await deleteDoc(doc(db, "users", uid));
     return;
   }
-  const profiles = getDemoProfiles();
-  delete profiles[uid];
-  saveDemoProfiles(profiles);
-  const users = getDemoUsers().filter((u) => u.uid !== uid);
-  saveDemoUsers(users);
+  return unavailable();
 }
 
 // ── Food Log Operations ─────────────────────────────────────────────
 
 export async function addFoodLog(entry: Omit<FoodLogEntry, "id">): Promise<FoodLogEntry> {
+  const required = ['energy', 'protein', 'fat', 'carbohydrate'] as const;
+  const optional = ['fiber', 'calcium', 'phosphorus', 'iron', 'sodium', 'potassium', 'copper', 'zinc'] as const;
+  const valid = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+  if (!Number.isFinite(entry.weightGrams) || entry.weightGrams <= 0 || !entry.nutrients ||
+      !required.every(key => valid(entry.nutrients[key])) ||
+      !optional.every(key => entry.nutrients[key] === null || valid(entry.nutrients[key]))) {
+    throw new Error("Enter a positive food weight and valid nutrient values.");
+  }
   const id = generateId();
   const full: FoodLogEntry = { ...entry, id };
   if (FIREBASE_CONFIGURED && db) {
     await setDoc(doc(db, "foodLogs", id), full);
     return full;
   }
-  const logs = getDemoLogs();
-  logs.push(full);
-  saveDemoLogs(logs);
-  return full;
+  return unavailable();
 }
 
 export async function getUserLogs(uid: string, date?: string): Promise<FoodLogEntry[]> {
@@ -241,8 +172,7 @@ export async function getUserLogs(uid: string, date?: string): Promise<FoodLogEn
     const snap = await getDocs(q);
     return snap.docs.map((d) => d.data() as FoodLogEntry);
   }
-  const logs = getDemoLogs();
-  return logs.filter((l) => l.userId === uid && (!date || l.date === date));
+  return unavailable();
 }
 
 export async function getAllLogs(): Promise<FoodLogEntry[]> {
@@ -250,7 +180,16 @@ export async function getAllLogs(): Promise<FoodLogEntry[]> {
     const snap = await getDocs(collection(db, "foodLogs"));
     return snap.docs.map((d) => d.data() as FoodLogEntry);
   }
-  return getDemoLogs();
+  return unavailable();
+}
+
+export function subscribeUserLogs(uid: string, date: string, next: (entries: FoodLogEntry[]) => void, error: (reason: unknown) => void): () => void {
+  if (!FIREBASE_CONFIGURED || !db) {
+    error(new Error('Firebase is not configured.'));
+    return () => {};
+  }
+  return onSnapshot(query(collection(db, 'foodLogs'), where('userId', '==', uid), where('date', '==', date)),
+    snapshot => next(snapshot.docs.map(item => ({ ...item.data(), id: item.id }) as FoodLogEntry)), error);
 }
 
 export async function deleteFoodLog(id: string): Promise<void> {
@@ -258,8 +197,7 @@ export async function deleteFoodLog(id: string): Promise<void> {
     await deleteDoc(doc(db, "foodLogs", id));
     return;
   }
-  const logs = getDemoLogs().filter((l) => l.id !== id);
-  saveDemoLogs(logs);
+  return unavailable();
 }
 
 export async function updateFoodLog(id: string, data: Partial<FoodLogEntry>): Promise<void> {
@@ -267,12 +205,7 @@ export async function updateFoodLog(id: string, data: Partial<FoodLogEntry>): Pr
     await updateDoc(doc(db, "foodLogs", id), data);
     return;
   }
-  const logs = getDemoLogs();
-  const idx = logs.findIndex((l) => l.id === id);
-  if (idx !== -1) {
-    logs[idx] = { ...logs[idx], ...data };
-    saveDemoLogs(logs);
-  }
+  return unavailable();
 }
 
 // ── Custom Foods (Admin) ────────────────────────────────────────────
@@ -282,9 +215,7 @@ export async function addCustomFood(food: Food): Promise<void> {
     await setDoc(doc(db, "foods", food.id), food);
     return;
   }
-  const foods = getDemoFoods();
-  foods.push(food);
-  saveDemoFoods(foods);
+  return unavailable();
 }
 
 export async function getCustomFoods(): Promise<Food[]> {
@@ -292,7 +223,7 @@ export async function getCustomFoods(): Promise<Food[]> {
     const snap = await getDocs(collection(db, "foods"));
     return snap.docs.map((d) => d.data() as Food);
   }
-  return getDemoFoods();
+  return unavailable();
 }
 
 export async function deleteCustomFood(id: string): Promise<void> {
@@ -300,8 +231,7 @@ export async function deleteCustomFood(id: string): Promise<void> {
     await deleteDoc(doc(db, "foods", id));
     return;
   }
-  const foods = getDemoFoods().filter((f) => f.id !== id);
-  saveDemoFoods(foods);
+  return unavailable();
 }
 
 export async function updateCustomFood(id: string, data: Partial<Food>): Promise<void> {
@@ -309,12 +239,7 @@ export async function updateCustomFood(id: string, data: Partial<Food>): Promise
     await updateDoc(doc(db, "foods", id), data as Record<string, unknown>);
     return;
   }
-  const foods = getDemoFoods();
-  const idx = foods.findIndex((f) => f.id === id);
-  if (idx !== -1) {
-    foods[idx] = { ...foods[idx], ...data };
-    saveDemoFoods(foods);
-  }
+  return unavailable();
 }
 
 // ── Auth State Listener ─────────────────────────────────────────────
@@ -323,8 +248,6 @@ export function onAuthStateChange(callback: (uid: string | null) => void): () =>
   if (FIREBASE_CONFIGURED && auth) {
     return onAuthStateChanged(auth, (user: User | null) => callback(user?.uid || null));
   }
-  // Demo mode: check localStorage
-  const uid = getCurrentDemoUid();
-  callback(uid);
+  callback(null);
   return () => {};
 }

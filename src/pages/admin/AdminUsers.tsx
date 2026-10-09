@@ -14,8 +14,9 @@ export default function AdminUsers() {
   const [selected, setSelected] = useState<UserProfile | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const load = () => getAllUsers().then(setUsers).finally(() => setLoading(false));
+  const load = () => { setError(""); setLoading(true); return getAllUsers().then(setUsers).catch(() => setError("Users could not be loaded. Check permissions and retry.")).finally(() => setLoading(false)); };
   useEffect(() => { load(); }, []);
 
   const filtered = users.filter((u) =>
@@ -24,22 +25,26 @@ export default function AdminUsers() {
 
   const handleDelete = async (uid: string) => {
     if (uid === currentUser?.uid) { alert("Tidak dapat menghapus akun sendiri."); return; }
-    await deleteUser(uid);
-    setUsers((prev) => prev.filter((u) => u.uid !== uid));
-    setConfirmDelete(null);
+    setSaving(true);
+    try { await deleteUser(uid); setUsers((prev) => prev.filter((u) => u.uid !== uid)); setConfirmDelete(null); }
+    catch { setError("Profile could not be removed. Check permissions and retry."); }
+    finally { setSaving(false); }
   };
 
   const handleToggleRole = async (u: UserProfile) => {
     const newRole = u.role === "admin" ? "user" : "admin";
     setSaving(true);
-    await updateUserProfile(u.uid, { role: newRole });
-    setUsers((prev) => prev.map((x) => x.uid === u.uid ? { ...x, role: newRole } : x));
-    setSaving(false);
+    try {
+      await updateUserProfile(u.uid, { role: newRole });
+      setUsers((prev) => prev.map((x) => x.uid === u.uid ? { ...x, role: newRole } : x));
+    } catch { setError("Role could not be changed. Check administrator permissions."); }
+    finally { setSaving(false); }
   };
 
   return (
     <AdminLayout>
       <div className="space-y-4">
+        {error && <p role="alert" className="error-text">{error} <button onClick={load}>Retry</button></p>}
         {/* Search */}
         <div className="relative">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--muted-foreground)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -160,8 +165,8 @@ export default function AdminUsers() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
             <div className="w-full max-w-sm rounded-2xl border shadow-2xl p-6 text-center" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
               <p className="text-3xl mb-3">⚠️</p>
-              <h3 className="font-display font-bold text-lg mb-2" style={{ color: "var(--foreground)" }}>Hapus Pengguna?</h3>
-              <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>Tindakan ini tidak dapat dibatalkan.</p>
+              <h3 className="font-display font-bold text-lg mb-2" style={{ color: "var(--foreground)" }}>Remove profile?</h3>
+              <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>This removes the Firestore profile only. Authentication access and food logs must be managed separately in Firebase.</p>
               <div className="flex gap-3">
                 <button onClick={() => setConfirmDelete(null)} className="flex-1 py-2.5 rounded-xl border font-medium text-sm" style={{ borderColor: "var(--border)", color: "var(--foreground)" }}>{t("cancel")}</button>
                 <button onClick={() => handleDelete(confirmDelete)} className="flex-1 py-2.5 rounded-xl font-bold text-sm" style={{ background: "#EF4444", color: "white" }}>Hapus</button>
